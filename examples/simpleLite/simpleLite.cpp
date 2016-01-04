@@ -81,6 +81,14 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/xphoto.hpp"
+#include "ColoredObj.hpp"
+
+using namespace cv;
 using namespace glm;
 // ============================================================================
 //	Constants
@@ -145,6 +153,17 @@ double modelRotateAngle = 0.0;
 bool rotated = false;
 bool scaled = false;
 
+// OpenCV vars
+//default capture width and height
+const int FRAME_WIDTH = 640;
+const int FRAME_HEIGHT = 480;
+//max number of objects to be detected in frame
+const int MAX_NUM_OBJECTS=50;
+
+//minimum and maximum object area
+const int MIN_OBJECT_AREA = 40*40;
+const int MAX_OBJECT_AREA = FRAME_HEIGHT*FRAME_WIDTH/1.5;
+
 // ============================================================================
 //	Function prototypes.
 // ============================================================================
@@ -180,6 +199,105 @@ GLuint sub_width = 256, sub_height = 256;
 // ============================================================================
 //	Functions
 // ============================================================================
+
+/**********************************************
+ OpenCV functions
+ *********************************************/
+
+string intToString(int number){
+    
+    
+    std::stringstream ss;
+    ss << number;
+    return ss.str();
+}
+
+void morphOps(Mat &thresh){
+    
+    //create structuring element that will be used to "dilate" and "erode" image.
+    //the element chosen here is a 3px by 3px rectangle
+    
+    Mat erodeElement = getStructuringElement( MORPH_RECT,Size(3,3));
+    //dilate with larger element so make sure object is nicely visible
+    Mat dilateElement = getStructuringElement( MORPH_RECT,Size(8,8));
+    
+    erode(thresh,thresh,erodeElement);
+    erode(thresh,thresh,erodeElement);
+    
+    
+    dilate(thresh,thresh,dilateElement);
+    dilate(thresh,thresh,dilateElement);
+    
+}
+
+void drawObject(vector<ColoredObj> objs,Mat &frame, bool calibrateMode){
+    
+    for (int i = 0; i < objs.size(); i++) {
+        cv::circle(frame,cv::Point(objs.at(i).getxPos(),objs.at(i).getyPos()),10,cv::Scalar(0,0,255));
+        cv::putText(frame,intToString(objs.at(i).getxPos())+ " , " + intToString(objs.at(i).getyPos()),cv::Point(objs.at(i).getxPos(),objs.at(i).getyPos()+20),1,1,Scalar(0,255,0));
+        if (!calibrateMode) {
+            cv::putText(frame, objs.at(i).getType(), cv::Point(objs.at(i).getxPos(),objs.at(i).getyPos()-30),1,2,Scalar(0,255,0));
+        }
+    }
+    
+    
+}
+
+void trackFilteredObject(ColoredObj coloredObj, Mat threshold, Mat &cameraFeed){
+    
+    vector<ColoredObj> coloredObjs;
+    
+    Mat temp;
+    threshold.copyTo(temp);
+    //these two vectors needed for output of findContours
+    vector< vector<Point> > contours;
+    vector<Vec4i> hierarchy;
+    //find contours of filtered image using openCV findContours function
+    findContours(temp,contours,hierarchy,CV_RETR_CCOMP,CV_CHAIN_APPROX_SIMPLE );
+    //use moments method to find our filtered object
+    double refArea = 0;
+    bool objectFound = false;
+    if (hierarchy.size() > 0) {
+        int numObjects = hierarchy.size();
+        //if number of objects greater than MAX_NUM_OBJECTS we have a noisy filter
+        if(numObjects<MAX_NUM_OBJECTS){
+            for (int index = 0; index >= 0; index = hierarchy[index][0]) {
+                
+                Moments moment = moments((cv::Mat)contours[index]);
+                double area = moment.m00;
+                
+                //if the area is less than 20 px by 20px then it is probably just noise
+                //if the area is the same as the 3/2 of the image size, probably just a bad filter
+                //we only want the object with the largest area so we safe a reference area each
+                //iteration and compare it to the area in the next iteration.
+                if(area>MIN_OBJECT_AREA){
+                    ColoredObj obj(coloredObj.getType());
+                    obj.setxPos(moment.m10/area);
+                    obj.setyPos(moment.m01/area);
+                    
+                    coloredObjs.push_back(obj);
+                    
+                    
+                    objectFound = true;
+                    
+                }else objectFound = false;
+                
+                
+            }
+            //let user know you found an object
+            if(objectFound ==true){
+                //draw object location on screen
+                drawObject(coloredObjs, cameraFeed, false);
+            }
+            
+        }else putText(cameraFeed,"TOO MUCH NOISE! ADJUST FILTER",Point(0,50),1,2,Scalar(0,0,255),2);
+    }
+}
+
+/*****************************************
+ ARToolKit functions
+ *****************************************/
+
 static bool foundPattern()
 {
     int pattIdx;
@@ -843,6 +961,12 @@ static void mainLoop(void)
     ARUint8 *image;
     ARdouble err;
     
+    // OpenCV vars
+    Mat matCV( gARHandle->ysize, gARHandle->xsize, CV_8UC4 );
+    Mat res(matCV.size(), matCV.type());
+    Mat threshold;
+
+    
     int j, k;
     
     // Find out how long since mainLoop() last ran.
@@ -896,6 +1020,35 @@ static void mainLoop(void)
                 gMarkers[i].gPatt_found = FALSE;
             }
         }
+        
+        /*********************
+         * Opencv part starts
+         *********************/
+        
+        memcpy( matCV.data, image, matCV.rows * matCV.cols * matCV.channels() );
+        
+        xphoto::balanceWhite(matCV, res, cv::xphoto::WHITE_BALANCE_SIMPLE);
+        
+        ColoredObj redObj("redObj"), blueObj("greenObj"), yellowObj("yellowObj");
+        inRange(res, redObj.getBGRmin(), redObj.getBGRmax(), threshold);
+        morphOps(threshold);
+        trackFilteredObject(redObj, threshold,res);
+        
+        inRange(res, blueObj.getBGRmin(), blueObj.getBGRmax(), threshold);
+        morphOps(threshold);
+        trackFilteredObject(blueObj, threshold,res);
+        
+        inRange(res, yellowObj.getBGRmin(), yellowObj.getBGRmax(), threshold);
+        morphOps(threshold);
+        trackFilteredObject(yellowObj, threshold,res);
+        
+        imshow("Threshold",threshold);
+        cv::imshow("after white balancing", res);
+        
+        
+        /**********************
+         * Opencv part ends
+         **********************/
         
         // Tell GLUT the display has changed.
         // The next iteration through glutMainLoop, the window's display callback will be called to redisplay the window's normal plane.
