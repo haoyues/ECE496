@@ -1042,7 +1042,7 @@ static void mainLoop(void)
         morphOps(threshold);
         trackFilteredObject(yellowObj, threshold,res);
         
-        imshow("Threshold",threshold);
+        //imshow("Threshold",threshold);
         cv::imshow("after white balancing", res);
         
         
