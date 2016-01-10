@@ -35,25 +35,32 @@
 
 #define NUM_OF_NUMBER           10
 
-static std::vector<glm::vec3> vertices[NUM_OF_NUMBER];
-static std::vector<glm::vec2> uvs[NUM_OF_NUMBER];
-static std::vector<glm::vec3> normals[NUM_OF_NUMBER];
-static GLuint vertexbuffer[NUM_OF_NUMBER];
-static GLuint uvbuffer[NUM_OF_NUMBER];
-static GLuint whiteTexture;
-static GLuint redTexture;
-static GLuint greenTexture;
+extern std::vector<glm::vec3> vertices[NUM_OF_NUMBER];
+extern std::vector<glm::vec2> uvs[NUM_OF_NUMBER];
+extern std::vector<glm::vec3> normals[NUM_OF_NUMBER];
+extern GLuint vertexbuffer[NUM_OF_NUMBER];
+extern GLuint uvbuffer[NUM_OF_NUMBER];
+extern GLuint whiteTexture;
+extern GLuint redTexture;
+extern GLuint greenTexture;
 
-static std::vector<glm::vec3> cube_vertices;
-static std::vector<glm::vec2> cube_uvs;
-static std::vector<glm::vec3> cube_normals;
-static GLuint cube_vertexbuffer;
-static GLuint cube_uvbuffer;
+extern std::vector<glm::vec3> cube_vertices;
+extern std::vector<glm::vec2> cube_uvs;
+extern std::vector<glm::vec3> cube_normals;
+extern GLuint cube_vertexbuffer;
+extern GLuint cube_uvbuffer;
 
 void DrawText(tablePiece piece);
 void DrawCube();
 void loadText();
 void loadCube();
+void loadObject(char * obj_file,
+                std::vector<glm::vec3> *vertices,
+                std::vector<glm::vec2> *uvs,
+                std::vector<glm::vec3> *normals,
+                GLuint *vertexbuffer,
+                GLuint *uvbuffer);
+void drawObject(GLuint texture, GLuint vertexbuffer, std::vector<glm::vec3> vertices);
 void drawBackground(const float width, const float height, const float x, const float y);
 
 

@@ -3,9 +3,20 @@
 #include "drawUtilities.hpp"
 #include "opencvUtilities.hpp"
 
-//
-// The following functions provide the onscreen help text and mode info.
-//
+std::vector<glm::vec3> vertices[NUM_OF_NUMBER];
+std::vector<glm::vec2> uvs[NUM_OF_NUMBER];
+std::vector<glm::vec3> normals[NUM_OF_NUMBER];
+GLuint vertexbuffer[NUM_OF_NUMBER];
+GLuint uvbuffer[NUM_OF_NUMBER];
+GLuint whiteTexture;
+GLuint redTexture;
+GLuint greenTexture;
+
+std::vector<glm::vec3> cube_vertices;
+std::vector<glm::vec2> cube_uvs;
+std::vector<glm::vec3> cube_normals;
+GLuint cube_vertexbuffer;
+GLuint cube_uvbuffer;
 
 static void print(const char *text, const float x, const float y, int calculateXFromRightEdge, int calculateYFromTopEdge)
 {

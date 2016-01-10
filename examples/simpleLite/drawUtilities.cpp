@@ -35,17 +35,8 @@ void DrawText(tablePiece piece)
             break;
     }
     
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, redTexture);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[textIdx]);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, sizeof(glm::vec3), 0);
-    
-    glDrawArrays(GL_TRIANGLES, 0, vertices[textIdx].size() * 3);
-    
-    glDisable(GL_TEXTURE_2D);
-}
+    drawObject(redTexture, vertexbuffer[textIdx], vertices[textIdx]);
+ }
 
 void DrawCube()
 {
@@ -53,34 +44,27 @@ void DrawCube()
     glEnable( GL_POLYGON_OFFSET_FILL );
     glPolygonOffset( 1.0, 1.0 );
     
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, redTexture);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, cube_vertexbuffer);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    
-    glVertexPointer(3, GL_FLOAT, sizeof(glm::vec3), 0);
-    
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size() * 3);
-    
-    glDisable(GL_TEXTURE_2D);
+    drawObject(redTexture, cube_vertexbuffer, cube_vertices);
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, greenTexture);
+    drawObject(greenTexture, cube_vertexbuffer, cube_vertices);
     
-    glBindBuffer(GL_ARRAY_BUFFER, cube_vertexbuffer);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void drawObject(GLuint texture, GLuint vertexbuffer, std::vector<glm::vec3> vertices)
+{
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glEnableClientState(GL_VERTEX_ARRAY);
     
     glVertexPointer(3, GL_FLOAT, sizeof(glm::vec3), 0);
     
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size() * 3);
-    
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    
+    glDrawArrays(GL_TRIANGLES, 0, vertices.size() * 3);
     glDisable(GL_TEXTURE_2D);
-    
 }
 
 void loadText()
@@ -100,40 +84,51 @@ void loadText()
         
         printf("obj file name is: %s\n", obj_file);
         
-        bool objloaded  = loadOBJ(obj_file, vertices[textIdx], uvs[textIdx], normals[textIdx]);
+        loadObject(obj_file,
+                   &vertices[textIdx],
+                   &uvs[textIdx],
+                   &normals[textIdx],
+                   &vertexbuffer[textIdx],
+                   &uvbuffer[textIdx]);
         
-        if(!objloaded)
-        {
-            printf("%d is not loaded!!", textIdx);
-        }
-        
-        glGenBuffers(1, &vertexbuffer[textIdx]);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[textIdx]);
-        glBufferData(GL_ARRAY_BUFFER, vertices[textIdx].size() * sizeof(glm::vec3), &vertices[textIdx][0], GL_STATIC_DRAW);
-        
-        glGenBuffers(1, &uvbuffer[textIdx]);
-        glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[textIdx]);
-        glBufferData(GL_ARRAY_BUFFER, uvs[textIdx].size() * sizeof(glm::vec2), &uvs[textIdx][0], GL_STATIC_DRAW);
+        printf("vertexbuffer is: %d, uvbuffer is: %d\n", vertexbuffer[textIdx], uvbuffer[textIdx]);
     }
 }
 
 void loadCube()
 {
-    char *obj_file = "Data/mesh/cube.obj";
-    bool objloaded  = loadOBJ(obj_file, cube_vertices, cube_uvs, cube_normals);
+    loadObject("Data/mesh/cube.obj",
+               &cube_vertices,
+               &cube_uvs,
+               &cube_normals,
+               &cube_vertexbuffer,
+               &cube_uvbuffer);
+    
+    printf("vertexbuffer is: %d, uvbuffer is: %d\n", cube_vertexbuffer, cube_uvbuffer);
+}
+
+void loadObject(char * obj_file,
+                std::vector<glm::vec3> *vertices,
+                std::vector<glm::vec2> *uvs,
+                std::vector<glm::vec3> *normals,
+                GLuint *vertexbuffer,
+                GLuint *uvbuffer)
+{
+    bool objloaded  = loadOBJ(obj_file, *vertices, *uvs, *normals);
     
     if(!objloaded)
     {
-        printf("cube is not loaded!!");
+        printf("object is not loaded!!");
     }
     
-    glGenBuffers(1, &cube_vertexbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, cube_vertexbuffer);
-    glBufferData(GL_ARRAY_BUFFER, cube_vertices.size() * sizeof(glm::vec3), &cube_vertices[0], GL_STATIC_DRAW);
+    glGenBuffers(1, vertexbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, *vertexbuffer);
+    glBufferData(GL_ARRAY_BUFFER, (*vertices).size() * sizeof(glm::vec3), &(*vertices)[0], GL_STATIC_DRAW);
     
-    glGenBuffers(1, &cube_uvbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, cube_uvbuffer);
-    glBufferData(GL_ARRAY_BUFFER, cube_uvs.size() * sizeof(glm::vec2), &cube_uvs[0], GL_STATIC_DRAW);
+    glGenBuffers(1, uvbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, *uvbuffer);
+    glBufferData(GL_ARRAY_BUFFER, (*uvs).size() * sizeof(glm::vec2), &(*uvs)[0], GL_STATIC_DRAW);
+
 }
 
 void drawBackground(const float width, const float height, const float x, const float y)
