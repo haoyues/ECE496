@@ -194,6 +194,7 @@ typedef double            ARdouble;
 extern "C" {
 #endif
 
+#define MAX_PATTERN_NAME_LEN 128
 /* --------------------------------------------------*/
 
 typedef enum {
@@ -390,6 +391,26 @@ typedef struct {
     float   bottomRightX;
     float   bottomRightY;
 } ARPattRectInfo;
+    
+    
+typedef enum _tablePiece
+{
+    FACE,
+    FACE_BACK,
+    LEG1,
+    LEG2,
+    LEG3,
+    LEG4
+}tablePiece;
+    
+typedef struct {
+    char         gPatt_name[MAX_PATTERN_NAME_LEN];
+    ARdouble     gPatt_width;
+    ARdouble     gPatt_trans[3][4];
+    int          gPatt_found;
+    int          gPatt_id;
+    tablePiece   piece;
+} ARMarker;
 
 /* --------------------------------------------------*/
 
@@ -483,26 +504,15 @@ typedef struct {
     ARdouble           pattRatio;
     AR_MATRIX_CODE_TYPE matrixCodeType;
 } ARHandle;
-
     
-typedef enum _tablePiece
-{
-    FACE,
-    FACE_BACK,
-    LEG1,
-    LEG2,
-    LEG3,
-    LEG4
-}tablePiece;
-    
-typedef struct {
+/*typedef struct {
     char*        gPatt_name;
     ARdouble     gPatt_width;
     ARdouble     gPatt_trans[3][4];
     int          gPatt_found;
     int          gPatt_id;
     tablePiece   piece;
-} ARMarker;
+} ARMarker;*/
     
 /* --------------------------------------------------*/
 

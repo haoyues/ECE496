@@ -9,19 +9,19 @@
 #include "ColoredObj.hpp"
 
 ColoredObj::ColoredObj() {
-    
+
 }
 
 ColoredObj::ColoredObj(string type_) {
     type = type_;
     
-    if (type_ == "redObj") {
+    if (type_ == "red") {
         setBGRmin(Scalar(0, 0, 140));
         setBGRmax(Scalar(100, 93, 255));
-    } else if (type_ == "greenObj") {
+    } else if (type_ == "green") {
         setBGRmin(Scalar(0, 77, 0));
         setBGRmax(Scalar(88, 144, 81));
-    } else if (type_ == "yellowObj") {
+    } else if (type_ == "yellow") {
         setBGRmin(Scalar(0, 123, 0));
         setBGRmax(Scalar(69, 255, 255));
     }
@@ -33,6 +33,21 @@ ColoredObj::~ColoredObj() {
 
 string ColoredObj::getType() {
     return type;
+}
+
+void ColoredObj::setType(string type_) {
+    type = type_;
+    
+    if (type_ == "red") {
+        setBGRmin(Scalar(0, 0, 140));
+        setBGRmax(Scalar(100, 93, 255));
+    } else if (type_ == "green") {
+        setBGRmin(Scalar(0, 77, 0));
+        setBGRmax(Scalar(88, 144, 81));
+    } else if (type_ == "yellow") {
+        setBGRmin(Scalar(0, 123, 0));
+        setBGRmax(Scalar(69, 255, 255));
+    }
 }
 
 int ColoredObj::getxPos() {
@@ -65,5 +80,13 @@ Scalar ColoredObj::getBGRmax() {
 
 Scalar ColoredObj::getBGRmin() {
     return BGRmin;
+}
+
+int ColoredObj::getNumbersToShow() {
+    return numbersToShow;
+}
+
+void ColoredObj::setNumbersToShow(int num) {
+    numbersToShow = num;
 }
 

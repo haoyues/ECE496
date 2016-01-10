@@ -275,8 +275,13 @@ int arParamLoad( const char *filename, int num, ARParam *param, ...)
         ret = -1;
         goto done;
     }
-
+    
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+        fprintf(stdout, "Current working dir: %s\n", cwd);
+    
     fp = fopen(filename, "rb");
+    
     if (fp == NULL) {
 		ARLOGe("Error (%d): unable to open camera parameters file \"%s\" for reading.\n", errno, filename);
 		ARLOGperror(NULL);
