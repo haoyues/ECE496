@@ -1,0 +1,7 @@
+Count=6
+Name=Data/patt.0 Dimension=80.0 Piece=0
+Name=Data/patt.0b Dimension=80.0 Piece=1
+Name=Data/patt.1 Dimension=80.0 Piece=2
+Name=Data/patt.2 Dimension=80.0 Piece=3
+Name=Data/patt.3 Dimension=80.0 Piece=4
+Name=Data/patt.4 Dimension=80.0 Piece=4
