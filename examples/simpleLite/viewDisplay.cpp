@@ -18,6 +18,12 @@ std::vector<glm::vec3> obj_normals;
 GLuint obj_vertexbuffer;
 GLuint obj_uvbuffer;
 
+std::vector<glm::vec3> screw_vertices;
+std::vector<glm::vec2> screw_uvs;
+std::vector<glm::vec3> screw_normals;
+GLuint screw_vertexbuffer;
+GLuint screw_uvbuffer;
+
 static bool cube_loaded = false;
 
 static void print(const char *text, const float x, const float y, int calculateXFromRightEdge, int calculateYFromTopEdge)
@@ -208,6 +214,7 @@ void loadObjects(void)
     
     loadText();
     loadCube();
+    loadScrew();
 }
 
 static void mainLoop(void)
@@ -544,8 +551,21 @@ void View2_Display(void)
         
     // All lighting and geometry to be drawn relative to the marker goes here.
     //DrawModel();
+    glPushMatrix();
     glScalef(20, 20, 20);
     DrawCube();
+    glPopMatrix();
+    
+    
+    /**
+     Screws
+     **/
+    loadScrew();
+    glPushMatrix();
+    glRotatef(45, 0, 0, 0);
+    glScalef(10, 10, 10);
+    drawObject(redTexture, screw_vertexbuffer, screw_vertices);
+    glPopMatrix();
     
     glutSwapBuffers();
 }

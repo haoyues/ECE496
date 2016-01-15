@@ -51,10 +51,18 @@ extern std::vector<glm::vec3> obj_normals;
 extern GLuint obj_vertexbuffer;
 extern GLuint obj_uvbuffer;
 
+extern std::vector<glm::vec3> screw_vertices;
+extern std::vector<glm::vec2> screw_uvs;
+extern std::vector<glm::vec3> screw_normals;
+extern GLuint screw_vertexbuffer;
+extern GLuint screw_uvbuffer;
+
+
 void DrawText(tablePiece piece);
 void DrawCube();
 void loadText();
 void loadCube();
+void loadScrew();
 void loadObject(char * obj_file,
                 std::vector<glm::vec3> *vertices,
                 std::vector<glm::vec2> *uvs,

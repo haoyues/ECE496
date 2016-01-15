@@ -114,6 +114,17 @@ void loadCube()
     printf("vertexbuffer is: %d, uvbuffer is: %d\n", obj_vertexbuffer, obj_uvbuffer);
 }
 
+void loadScrew() {
+    loadObject("Data/mesh/screw1.obj",
+               &screw_vertices,
+               &screw_uvs,
+               &screw_normals,
+               &screw_vertexbuffer,
+               &screw_uvbuffer);
+    
+    printf("vertexbuffer is: %d, uvbuffer is: %d\n", screw_vertexbuffer, screw_uvbuffer);
+}
+
 void loadObject(char * obj_file,
                 std::vector<glm::vec3> *vertices,
                 std::vector<glm::vec2> *uvs,
