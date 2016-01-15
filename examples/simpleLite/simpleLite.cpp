@@ -411,6 +411,7 @@ int main(int argc, char** argv)
         window = glutCreateWindow(argv[0]);
     }
     
+    //define the position of the views
     View1 = glutCreateSubWindow(window, 0, 0, 615, 460);
     View2 = glutCreateSubWindow(window, 620, 0, 409, 460);
     View3 = glutCreateSubWindow(window, 0, 465, 1024, 308);
@@ -468,7 +469,6 @@ int main(int argc, char** argv)
     glutSetWindow(View3);
     glutDisplayFunc(View3_Display);
     
-   
     glutReshapeFunc(Reshape);
     //glutVisibilityFunc(Visibility);
     glutKeyboardFunc(Keyboard);

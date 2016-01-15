@@ -12,11 +12,13 @@ GLuint whiteTexture;
 GLuint redTexture;
 GLuint greenTexture;
 
-std::vector<glm::vec3> cube_vertices;
-std::vector<glm::vec2> cube_uvs;
-std::vector<glm::vec3> cube_normals;
-GLuint cube_vertexbuffer;
-GLuint cube_uvbuffer;
+std::vector<glm::vec3> obj_vertices;
+std::vector<glm::vec2> obj_uvs;
+std::vector<glm::vec3> obj_normals;
+GLuint obj_vertexbuffer;
+GLuint obj_uvbuffer;
+
+static bool cube_loaded = false;
 
 static void print(const char *text, const float x, const float y, int calculateXFromRightEdge, int calculateYFromTopEdge)
 {
@@ -339,7 +341,7 @@ void View1_Display(void)
     //none
     
     /*if (gPatt_found_1) {*/
-    if(TRUE) {
+    /*if(TRUE) {
         
         m[0] = 1.0;
         m[1] = 0.0;
@@ -368,7 +370,9 @@ void View1_Display(void)
         
         // All lighting and geometry to be drawn relative to the marker goes here.
         //DrawModel();
-    } // gPatt_foundq
+        glScalef(20, 20, 20);
+        DrawCube();
+    } // gPatt_foundq*/
     
     int markerIdx;
     for(markerIdx = 0; markerIdx < NUM_OF_MARKER; markerIdx++)
@@ -388,7 +392,7 @@ void View1_Display(void)
             glScalef(60, 60, 60);
             glTranslatef(0.0f, 0.0f, 0.5f);
             DrawText(gMarkers[markerIdx].piece);
-            DrawCube();
+            //DrawCube();
             glPopMatrix();
         }
     }
@@ -430,7 +434,6 @@ static bool foundPattern()
     
     return FALSE;
 }
-
 
 int setupMarker(char *filename)
 {
@@ -476,8 +479,86 @@ int setupMarker(char *filename)
     return (TRUE);
 }
 
-void View2_Display(void) {
+void View2_Display(void)
+{
+    
+    if(!cube_loaded)
+    {
+        //load your obj here
+        redTexture = loadBMP_custom("Data/mesh/red.bmp");
+        greenTexture = loadBMP_custom("Data/mesh/green.bmp");
+        
+        loadCube();
+
+        cube_loaded = true;
+    }
+    
+    ARdouble p[16];
+    ARdouble m[16];
+    
+    glutPostRedisplay();
+    // Select correct buffer for this context.
+    glDrawBuffer(GL_BACK);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the buffers for new frame.
+    
+    // Projection transformation.
+    arglCameraFrustumRH(&(gCparamLT->param), VIEW_DISTANCE_MIN, VIEW_DISTANCE_MAX, p);
+    glMatrixMode(GL_PROJECTION);
+#ifdef ARDOUBLE_IS_FLOAT
+    glLoadMatrixf(p);
+#else
+    glLoadMatrixd(p);
+#endif
+    glMatrixMode(GL_MODELVIEW);
+    
+    glEnable(GL_DEPTH_TEST);
+    
+    // Viewing transformation.
+    glLoadIdentity();
+    // Lighting and geometry that moves with the camera should go here.
+    // (I.e. must be specified before viewing transformations.)
+    //none
+    
+    m[0] = 1.0;
+    m[1] = 0.0;
+    m[2] = 0.0;
+    m[3] = 0.0;
+    m[4] = 0.0;
+    m[5] = 1.0;
+    m[6] = 0.0;
+    m[7] = 0.0;
+    m[8] = 0.0;
+    m[9] = 0.0;
+    m[10] = 1.0;
+    m[11] = 0.0;
+    m[12] = 0.0;
+    m[13] = -50.0;
+    m[14] = -200.0;
+    m[15] = 1.0;
+    
+#ifdef ARDOUBLE_IS_FLOAT
+    glLoadMatrixf(m);
+#else
+    glLoadMatrixd(m);
+#endif
+        
+    // All lighting and geometry to be drawn relative to the marker goes here.
+    //DrawModel();
+    glScalef(20, 20, 20);
+    DrawCube();
+    
+    glutSwapBuffers();
+}
+
+void View2_Display_bak(void) {
     int i;
+    
+    if(!cube_loaded)
+    {
+        //load your obj here
+        loadCube();
+        cube_loaded = true;
+    }
     
     glutPostRedisplay();
     /********************************* SCALE DATA **********************************/
@@ -489,8 +570,8 @@ void View2_Display(void) {
     const float TABLE_LEG_SCALE_Z = 1.0f;
     /********************************* CUBE DATA **********************************/
     const GLfloat cube_vertices [8][3] = {
-        /* +z */ {0.5f, 0.5f, 0.5f}, {0.5f, -0.5f, 0.5f}, {-0.5f, -0.5f, 0.5f}, {-0.5f, 0.5f, 0.5f},
-        /* -z */ {0.5f, 0.5f, -0.5f}, {0.5f, -0.5f, -0.5f}, {-0.5f, -0.5f, -0.5f}, {-0.5f, 0.5f, -0.5f} };
+        {0.5f, 0.5f, 0.5f}, {0.5f, -0.5f, 0.5f}, {-0.5f, -0.5f, 0.5f}, {-0.5f, 0.5f, 0.5f},
+        {0.5f, 0.5f, -0.5f}, {0.5f, -0.5f, -0.5f}, {-0.5f, -0.5f, -0.5f}, {-0.5f, 0.5f, -0.5f} };
     const GLubyte cube_vertex_colors_right[8][4] = {
         {0, 255, 0, 100}, {0, 255, 0, 100}, {0, 255, 0, 100}, {0, 255, 0, 100},
         {0, 255, 0, 100}, {0, 255, 0, 100}, {0, 255, 0, 100}, {0, 255, 0, 100} };
@@ -504,16 +585,22 @@ void View2_Display(void) {
     const GLubyte cube_vertex_colors [8][4] = {
         {255, 255, 255, 100}, {255, 255, 255, 100}, {255, 255, 255, 100}, {255, 255, 255, 100},
         {255, 255, 255, 100}, {255, 255, 255, 100}, {255, 255, 255, 100}, {255, 255, 255, 100} };
-    const GLubyte cube_faces [6][4] = { /* ccw-winding */
-        /* +z */ {3, 2, 1, 0}, /* -y */ {2, 3, 7, 6}, /* +y */ {0, 1, 5, 4},
-        /* -x */ {3, 0, 4, 7}, /* +x */ {1, 2, 6, 5}, /* -z */ {4, 5, 6, 7} };
+    const GLubyte cube_faces [6][4] = {
+        {3, 2, 1, 0}, {2, 3, 7, 6}, {0, 1, 5, 4},
+        {3, 0, 4, 7}, {1, 2, 6, 5}, {4, 5, 6, 7} };
+    
     
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+    glDrawBuffer(GL_BACK);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
+    glLoadIdentity();
     
+    //view transformation
+    gluLookAt(0, 0, -7.5, 0, 0, 0, 0, 1, 0);
+    //change camera position
+    //glTranslatef(0, 0, -7.5);
     // Render a color-cube consisting of 6 quads with different colors
     
     if(!scaled)
@@ -528,6 +615,14 @@ void View2_Display(void) {
         rotated = true;
     }
     glTranslatef(0.0f, 0.5f, 2.0f);
+    
+    glPushMatrix();
+    glTranslatef(0.0f, -0.5f, -2.0f);
+    glScalef(0.5, 0.5, 0.5);
+    DrawCube();
+
+    glPopMatrix();
+
     
     glPushMatrix();
     //rotate the table face is marker 1 is found, i.e. the orientation is wrong
@@ -612,19 +707,6 @@ void View2_Display(void) {
     glPopMatrix();
     
     /********************************* TABLE LEG2 **********************************/
-    
-    /*static void DrawModel(ARMarker marker,
-     GLfloat vertices[][3],
-     GLfloat faces[][4],
-     GLfloat vertex_colors_right[][4],
-     GLfloat vertex_colors_wrong[][4],
-     GLfloat vertex_colors[][4])*/
-    /*DrawModel(gMarkers[2],
-     cube_vertices[8][3],
-     cube_faces[6][4],
-     cube_vertex_colors_right[8][4],
-     cube_vertex_colors_wrong[8][4],
-     cube_vertex_colors[8][4]);*/
     
     glPushMatrix();
     glTranslatef(0.4f, 0.0f, -2.4f);

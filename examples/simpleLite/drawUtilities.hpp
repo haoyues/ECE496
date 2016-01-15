@@ -31,6 +31,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 #define NUM_OF_NUMBER           10
@@ -44,11 +45,11 @@ extern GLuint whiteTexture;
 extern GLuint redTexture;
 extern GLuint greenTexture;
 
-extern std::vector<glm::vec3> cube_vertices;
-extern std::vector<glm::vec2> cube_uvs;
-extern std::vector<glm::vec3> cube_normals;
-extern GLuint cube_vertexbuffer;
-extern GLuint cube_uvbuffer;
+extern std::vector<glm::vec3> obj_vertices;
+extern std::vector<glm::vec2> obj_uvs;
+extern std::vector<glm::vec3> obj_normals;
+extern GLuint obj_vertexbuffer;
+extern GLuint obj_uvbuffer;
 
 void DrawText(tablePiece piece);
 void DrawCube();

@@ -44,17 +44,18 @@ void DrawCube()
     glEnable( GL_POLYGON_OFFSET_FILL );
     glPolygonOffset( 1.0, 1.0 );
     
-    drawObject(redTexture, cube_vertexbuffer, cube_vertices);
+    drawObject(redTexture, obj_vertexbuffer, obj_vertices);
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
-    drawObject(greenTexture, cube_vertexbuffer, cube_vertices);
+    drawObject(greenTexture, obj_vertexbuffer, obj_vertices);
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void drawObject(GLuint texture, GLuint vertexbuffer, std::vector<glm::vec3> vertices)
 {
+    GLint bufferSize;
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
     
@@ -63,7 +64,13 @@ void drawObject(GLuint texture, GLuint vertexbuffer, std::vector<glm::vec3> vert
     
     glVertexPointer(3, GL_FLOAT, sizeof(glm::vec3), 0);
     
+    //glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &bufferSize);
+    //printf("buffer size is: %d\n", bufferSize);
+    
     glDrawArrays(GL_TRIANGLES, 0, vertices.size() * 3);
+    
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisable(GL_TEXTURE_2D);
 }
 
@@ -98,13 +105,13 @@ void loadText()
 void loadCube()
 {
     loadObject("Data/mesh/cube.obj",
-               &cube_vertices,
-               &cube_uvs,
-               &cube_normals,
-               &cube_vertexbuffer,
-               &cube_uvbuffer);
+               &obj_vertices,
+               &obj_uvs,
+               &obj_normals,
+               &obj_vertexbuffer,
+               &obj_uvbuffer);
     
-    printf("vertexbuffer is: %d, uvbuffer is: %d\n", cube_vertexbuffer, cube_uvbuffer);
+    printf("vertexbuffer is: %d, uvbuffer is: %d\n", obj_vertexbuffer, obj_uvbuffer);
 }
 
 void loadObject(char * obj_file,
@@ -128,6 +135,8 @@ void loadObject(char * obj_file,
     glGenBuffers(1, uvbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, *uvbuffer);
     glBufferData(GL_ARRAY_BUFFER, (*uvs).size() * sizeof(glm::vec2), &(*uvs)[0], GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 }
 
