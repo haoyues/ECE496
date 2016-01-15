@@ -564,7 +564,17 @@ void View2_Display(void)
     glPushMatrix();
     glRotatef(45, 0, 0, 0);
     glScalef(10, 10, 10);
-    drawObject(redTexture, screw_vertexbuffer, screw_vertices);
+    bool found = false;
+    for (int i = 0; i < MAX_COLOUR_NUM; i++) {
+        if (opencvUtilities::gScrews[i].objectFound) {
+            found = true;
+            break;
+        }
+    }
+    if (found)
+        drawObject(greenTexture, screw_vertexbuffer, screw_vertices);
+    else
+        drawObject(redTexture, screw_vertexbuffer, screw_vertices);
     glPopMatrix();
     
     glutSwapBuffers();
