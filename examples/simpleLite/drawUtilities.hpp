@@ -45,11 +45,13 @@ extern GLuint whiteTexture;
 extern GLuint redTexture;
 extern GLuint greenTexture;
 
-extern std::vector<glm::vec3> obj_vertices;
-extern std::vector<glm::vec2> obj_uvs;
-extern std::vector<glm::vec3> obj_normals;
-extern GLuint obj_vertexbuffer;
-extern GLuint obj_uvbuffer;
+//read a set of objects from file
+extern int numofObjects;
+extern std::vector<glm::vec3> *obj_vertices;
+extern std::vector<glm::vec2> *obj_uvs;
+extern std::vector<glm::vec3> *obj_normals;
+extern GLuint *obj_vertexbuffer;
+extern GLuint *obj_uvbuffer;
 
 extern std::vector<glm::vec3> screw_vertices;
 extern std::vector<glm::vec2> screw_uvs;
@@ -60,6 +62,7 @@ extern GLuint screw_uvbuffer;
 
 void DrawText(tablePiece piece);
 void DrawCube();
+void drawFurniture();
 void loadText();
 void loadCube();
 void loadScrew();
@@ -69,6 +72,7 @@ void loadObject(char * obj_file,
                 std::vector<glm::vec3> *normals,
                 GLuint *vertexbuffer,
                 GLuint *uvbuffer);
+int loadFurnitureObject(char *filename);
 void drawObject(GLuint texture, GLuint vertexbuffer, std::vector<glm::vec3> vertices);
 void drawBackground(const float width, const float height, const float x, const float y);
 

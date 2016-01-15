@@ -12,11 +12,12 @@ GLuint whiteTexture;
 GLuint redTexture;
 GLuint greenTexture;
 
-std::vector<glm::vec3> obj_vertices;
-std::vector<glm::vec2> obj_uvs;
-std::vector<glm::vec3> obj_normals;
-GLuint obj_vertexbuffer;
-GLuint obj_uvbuffer;
+int numofObjects = 0;
+std::vector<glm::vec3> *obj_vertices;
+std::vector<glm::vec2> *obj_uvs;
+std::vector<glm::vec3> *obj_normals;
+GLuint *obj_vertexbuffer;
+GLuint *obj_uvbuffer;
 
 std::vector<glm::vec3> screw_vertices;
 std::vector<glm::vec2> screw_uvs;
@@ -213,8 +214,6 @@ void loadObjects(void)
     greenTexture = loadBMP_custom("Data/mesh/green.bmp");
     
     loadText();
-    loadCube();
-    loadScrew();
 }
 
 static void mainLoop(void)
@@ -495,8 +494,9 @@ void View2_Display(void)
         redTexture = loadBMP_custom("Data/mesh/red.bmp");
         greenTexture = loadBMP_custom("Data/mesh/green.bmp");
         
-        loadCube();
+        //loadCube();
 
+        loadFurnitureObject("Data/furniture.txt");
         cube_loaded = true;
     }
     
@@ -539,8 +539,8 @@ void View2_Display(void)
     m[10] = 1.0;
     m[11] = 0.0;
     m[12] = 0.0;
-    m[13] = -50.0;
-    m[14] = -200.0;
+    m[13] = 0.0;
+    m[14] = -100.0;
     m[15] = 1.0;
     
 #ifdef ARDOUBLE_IS_FLOAT
@@ -550,16 +550,13 @@ void View2_Display(void)
 #endif
         
     // All lighting and geometry to be drawn relative to the marker goes here.
-    //DrawModel();
-    glPushMatrix();
+    /*glPushMatrix();
     glScalef(20, 20, 20);
     DrawCube();
     glPopMatrix();
     
     
-    /**
-     Screws
-     **/
+    
     loadScrew();
     glPushMatrix();
     glRotatef(45, 0, 0, 0);
@@ -575,7 +572,11 @@ void View2_Display(void)
         drawObject(greenTexture, screw_vertexbuffer, screw_vertices);
     else
         drawObject(redTexture, screw_vertexbuffer, screw_vertices);
-    glPopMatrix();
+    glPopMatrix();*/
+    
+    glTranslatef(0.0, -10.0, 0.0);
+    glScalef(10.0, 10.0, 10.0);
+    drawFurniture();
     
     glutSwapBuffers();
 }
@@ -586,7 +587,7 @@ void View2_Display_bak(void) {
     if(!cube_loaded)
     {
         //load your obj here
-        loadCube();
+        //loadCube();
         cube_loaded = true;
     }
     
@@ -649,7 +650,7 @@ void View2_Display_bak(void) {
     glPushMatrix();
     glTranslatef(0.0f, -0.5f, -2.0f);
     glScalef(0.5, 0.5, 0.5);
-    DrawCube();
+    //DrawCube();
 
     glPopMatrix();
 

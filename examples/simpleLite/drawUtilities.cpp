@@ -38,7 +38,7 @@ void DrawText(tablePiece piece)
     drawObject(redTexture, vertexbuffer[textIdx], vertices[textIdx]);
  }
 
-void DrawCube()
+/*void DrawCube()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable( GL_POLYGON_OFFSET_FILL );
@@ -51,11 +51,19 @@ void DrawCube()
     drawObject(greenTexture, obj_vertexbuffer, obj_vertices);
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}*/
+void drawFurniture()
+{
+    int i;
+    for(i = 0; i < numofObjects; i++)
+    {
+        drawObject(redTexture, obj_vertexbuffer[i], obj_vertices[i]);
+    }
 }
 
 void drawObject(GLuint texture, GLuint vertexbuffer, std::vector<glm::vec3> vertices)
 {
-    GLint bufferSize;
+   // GLint bufferSize;
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
     
@@ -102,9 +110,58 @@ void loadText()
     }
 }
 
-void loadCube()
+int loadFurnitureObject(char *filename)
 {
-    loadObject("Data/mesh/cube.obj",
+    
+    FILE *furnitureObjFile = NULL;
+    char name[MAX_PATTERN_NAME_LEN];
+    int pieceIdx = 0;
+    
+    furnitureObjFile = fopen(filename, "rb");
+    
+    if(furnitureObjFile == NULL)
+    {
+        perror("file open error");
+        return (FALSE);
+    }
+    
+    fscanf(furnitureObjFile, "Count=%d\n", &numofObjects);
+    obj_vertices = (std::vector<glm::vec3> *)malloc(numofObjects * sizeof(std::vector<glm::vec3>));
+    obj_uvs = (std::vector<glm::vec2> *)malloc(numofObjects * sizeof(std::vector<glm::vec2>));
+    obj_normals = (std::vector<glm::vec3> *)malloc(numofObjects * sizeof(std::vector<glm::vec3>));
+    obj_vertexbuffer = (GLuint *)malloc(numofObjects * sizeof(GLuint));
+    obj_uvbuffer = (GLuint *)malloc(numofObjects * sizeof(GLuint));
+    memset(obj_vertices, 0x0, numofObjects * sizeof(std::vector<glm::vec3>));
+    memset(obj_uvs, 0x0, numofObjects * sizeof(std::vector<glm::vec2>));
+    memset(obj_normals, 0x0, numofObjects * sizeof(std::vector<glm::vec3>));
+    memset(obj_vertexbuffer, 0x0, numofObjects * sizeof(GLuint));
+    memset(obj_uvbuffer, 0x0, numofObjects * sizeof(GLuint));
+    
+    while (!feof(furnitureObjFile))
+    {
+        if (fscanf(furnitureObjFile,"Name=%s\n",name) != 1)
+        {
+            // found a line that does match this pattern: try again later, the file might be currently written
+            perror("error");
+            return (FALSE);
+        }
+        
+        loadObject(name,
+                   &obj_vertices[pieceIdx],
+                   &obj_uvs[pieceIdx],
+                   &obj_normals[pieceIdx],
+                   &obj_vertexbuffer[pieceIdx],
+                   &obj_uvbuffer[pieceIdx]);
+        
+        pieceIdx++;
+    }
+    
+    return (TRUE);
+}
+
+/*void loadCube()
+{
+    loadObject("Data/mesh/table_top.obj",
                &obj_vertices,
                &obj_uvs,
                &obj_normals,
@@ -112,7 +169,7 @@ void loadCube()
                &obj_uvbuffer);
     
     printf("vertexbuffer is: %d, uvbuffer is: %d\n", obj_vertexbuffer, obj_uvbuffer);
-}
+}*/
 
 void loadScrew() {
     loadObject("Data/mesh/screw1.obj",
