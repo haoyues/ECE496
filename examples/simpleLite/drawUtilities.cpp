@@ -38,27 +38,118 @@ void DrawText(tablePiece piece)
     drawObject(redTexture, vertexbuffer[textIdx], vertices[textIdx]);
  }
 
-/*void DrawCube()
-{
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable( GL_POLYGON_OFFSET_FILL );
-    glPolygonOffset( 1.0, 1.0 );
-    
-    drawObject(redTexture, obj_vertexbuffer, obj_vertices);
-    
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    
-    drawObject(greenTexture, obj_vertexbuffer, obj_vertices);
-    
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-}*/
-void drawFurniture()
+void drawFurniture(furniturePiece *pieces)
 {
     int i;
-    for(i = 0; i < numofObjects; i++)
+    for(i = 0; i < numofPieces; i++)
     {
-        drawObject(redTexture, obj_vertexbuffer[i], obj_vertices[i]);
+        if(pieces[i].display)
+        {
+            glPushMatrix();
+        
+            glTranslatef(pieces[i].translate[0], pieces[i].translate[1], pieces[i].translate[2]);
+            glScalef(pieces[i].scale[0], pieces[i].scale[1], pieces[i].scale[2]);
+            if(pieces[i].rotate[0] != 0.0)
+            {
+                glRotatef(pieces[i].rotate[0], 1.0, 0.0, 0.0);
+            }
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glEnable( GL_POLYGON_OFFSET_FILL );
+            glPolygonOffset( 1.0, 1.0 );
+        
+        
+            if(pieces[i].marker != -1 && gMarkers[pieces[i].marker].gPatt_found)
+            {
+                drawObject(yellowTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx]);
+            }
+            else
+            {
+                drawObject(whiteTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx]);
+            }
+        
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            drawObject(greenTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx]);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glDisable( GL_POLYGON_OFFSET_FILL );
+            glPopMatrix();
+        }
+        
     }
+    
+}
+
+void drawAnimation(int step)
+{
+    drawFurniture(instruction[step]);
+}
+
+int loadAnimation(char * filename)
+{
+    FILE *animationFile = NULL;
+    char name[MAX_NAME_LEN];
+    int idx;
+    int pieceIdx = 0;
+    int step = 0;
+    
+    animationFile = fopen(filename, "rb");
+    
+    if(animationFile == NULL)
+    {
+        perror("file open error");
+        return (FALSE);
+    }
+    
+    fscanf(animationFile, "Total Step=%d\n", &totalNumofStep);
+    
+    printf("total number of step is: %d\n", totalNumofStep);
+    instruction = (furniturePiece **)malloc(totalNumofStep * sizeof(furniturePiece*));
+    for(idx = 0; idx < totalNumofStep; idx++)
+    {
+        instruction[idx] = (furniturePiece *)malloc(numofPieces * sizeof(furniturePiece));
+        memset((instruction[idx]), 0x0, numofPieces * sizeof(furniturePiece));
+        for(pieceIdx = 0; pieceIdx < numofPieces; pieceIdx++)
+        {
+            instruction[idx][pieceIdx].bufferIdx = model[pieceIdx].bufferIdx;
+        }
+    }
+    
+    printf("instruction 0: %x, instruction 1: %x\n", instruction[0], instruction[1]);
+    printf("piece 0: %x\n",instruction[0][0]);
+    
+    while (!feof(animationFile))
+    {
+        if (fscanf(animationFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f Marker=%d Display=%d\n",
+                   name,
+                   &(instruction[step][pieceIdx].scale[0]),
+                   &(instruction[step][pieceIdx].scale[1]),
+                   &(instruction[step][pieceIdx].scale[2]),
+                   &(instruction[step][pieceIdx].translate[0]),
+                   &(instruction[step][pieceIdx].translate[1]),
+                   &(instruction[step][pieceIdx].translate[2]),
+                   &(instruction[step][pieceIdx].rotate[0]),
+                   &(instruction[step][pieceIdx].rotate[1]),
+                   &(instruction[step][pieceIdx].rotate[2]),
+                   &(instruction[step][pieceIdx].marker),
+                   &(instruction[step][pieceIdx].display)) == 12)
+        {
+            pieceIdx++;
+        }
+
+        else if(fscanf(animationFile, "Step=%d\n", &step) == 1)
+        {
+           pieceIdx = 0;
+        }
+
+        else
+        {
+            perror("error");
+            return (FALSE);
+        }
+
+
+    }
+    
+    return (TRUE);
 }
 
 void drawObject(GLuint texture, GLuint vertexbuffer, std::vector<glm::vec3> vertices)
@@ -110,12 +201,14 @@ void loadText()
     }
 }
 
-int loadFurnitureObject(char *filename)
+int loadFurnitureObject(char *filename, furniturePiece **pieces)
 {
     
     FILE *furnitureObjFile = NULL;
-    char name[MAX_PATTERN_NAME_LEN];
+    char prev_name[MAX_NAME_LEN];
+    char name[MAX_NAME_LEN];
     int pieceIdx = 0;
+    int objIdx = 0;
     
     furnitureObjFile = fopen(filename, "rb");
     
@@ -125,61 +218,62 @@ int loadFurnitureObject(char *filename)
         return (FALSE);
     }
     
-    fscanf(furnitureObjFile, "Count=%d\n", &numofObjects);
+    fscanf(furnitureObjFile, "Count=%d Piece Count=%d\n", &numofObjects, &numofPieces);
     obj_vertices = (std::vector<glm::vec3> *)malloc(numofObjects * sizeof(std::vector<glm::vec3>));
     obj_uvs = (std::vector<glm::vec2> *)malloc(numofObjects * sizeof(std::vector<glm::vec2>));
     obj_normals = (std::vector<glm::vec3> *)malloc(numofObjects * sizeof(std::vector<glm::vec3>));
     obj_vertexbuffer = (GLuint *)malloc(numofObjects * sizeof(GLuint));
     obj_uvbuffer = (GLuint *)malloc(numofObjects * sizeof(GLuint));
+    (*pieces) = (furniturePiece *)malloc(numofPieces * sizeof(furniturePiece));
+    
     memset(obj_vertices, 0x0, numofObjects * sizeof(std::vector<glm::vec3>));
     memset(obj_uvs, 0x0, numofObjects * sizeof(std::vector<glm::vec2>));
     memset(obj_normals, 0x0, numofObjects * sizeof(std::vector<glm::vec3>));
     memset(obj_vertexbuffer, 0x0, numofObjects * sizeof(GLuint));
     memset(obj_uvbuffer, 0x0, numofObjects * sizeof(GLuint));
+    memset((*pieces), 0x0, numofPieces * sizeof(furniturePiece));
     
     while (!feof(furnitureObjFile))
     {
-        if (fscanf(furnitureObjFile,"Name=%s\n",name) != 1)
+        if (fscanf(furnitureObjFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f Marker=%d Display=%d\n",
+                   name,
+                   &(*pieces)[pieceIdx].scale[0],
+                   &(*pieces)[pieceIdx].scale[1],
+                   &(*pieces)[pieceIdx].scale[2],
+                   &(*pieces)[pieceIdx].translate[0],
+                   &(*pieces)[pieceIdx].translate[1],
+                   &(*pieces)[pieceIdx].translate[2],
+                   &(*pieces)[pieceIdx].rotate[0],
+                   &(*pieces)[pieceIdx].rotate[1],
+                   &(*pieces)[pieceIdx].rotate[2],
+                   &(*pieces)[pieceIdx].marker,
+                   &(*pieces)[pieceIdx].display) != 12)
         {
             // found a line that does match this pattern: try again later, the file might be currently written
             perror("error");
             return (FALSE);
         }
         
+        if(strcmp(prev_name, name) == 0)
+        {
+            (*pieces)[pieceIdx].bufferIdx = objIdx - 1;
+            pieceIdx++;
+            continue;
+        }
+        strcpy(prev_name, name);
+        (*pieces)[pieceIdx].bufferIdx = objIdx;
+        
         loadObject(name,
-                   &obj_vertices[pieceIdx],
-                   &obj_uvs[pieceIdx],
-                   &obj_normals[pieceIdx],
-                   &obj_vertexbuffer[pieceIdx],
-                   &obj_uvbuffer[pieceIdx]);
+                   &obj_vertices[objIdx],
+                   &obj_uvs[objIdx],
+                   &obj_normals[objIdx],
+                   &obj_vertexbuffer[objIdx],
+                   &obj_uvbuffer[objIdx]);
         
         pieceIdx++;
+        objIdx++;
     }
-    
     return (TRUE);
-}
-
-/*void loadCube()
-{
-    loadObject("Data/mesh/table_top.obj",
-               &obj_vertices,
-               &obj_uvs,
-               &obj_normals,
-               &obj_vertexbuffer,
-               &obj_uvbuffer);
-    
-    printf("vertexbuffer is: %d, uvbuffer is: %d\n", obj_vertexbuffer, obj_uvbuffer);
-}*/
-
-void loadScrew() {
-    loadObject("Data/mesh/screw1.obj",
-               &screw_vertices,
-               &screw_uvs,
-               &screw_normals,
-               &screw_vertexbuffer,
-               &screw_uvbuffer);
-    
-    printf("vertexbuffer is: %d, uvbuffer is: %d\n", screw_vertexbuffer, screw_uvbuffer);
 }
 
 void loadObject(char * obj_file,

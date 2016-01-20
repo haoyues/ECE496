@@ -330,6 +330,7 @@ static void Keyboard(unsigned char key, int x, int y)
 //	This function is called when the
 //	GLUT window is resized.
 //
+
 static void Reshape(int w, int h)
 {
     windowWidth = w;
@@ -342,9 +343,11 @@ static void Reshape(int w, int h)
     
     // Set the aspect ratio of the clipping volume to match the viewport
     glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
+    
     glLoadIdentity();             // Reset
     // Enable perspective projection with fovy, aspect, zNear and zFar
     gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+
 }
 
 //
@@ -412,9 +415,9 @@ int main(int argc, char** argv)
     }
     
     //define the position of the views
-    View1 = glutCreateSubWindow(window, 0, 0, 615, 460);
-    View2 = glutCreateSubWindow(window, 620, 0, 409, 460);
-    View3 = glutCreateSubWindow(window, 0, 465, 1024, 308);
+    View1 = glutCreateSubWindow(window, 0, 0, VIEW1_WIDTH, VIEW1_HEIGHT);
+    View2 = glutCreateSubWindow(window, VIEW1_WIDTH+GAP, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
+    View3 = glutCreateSubWindow(window, 0, VIEW2_HEIGHT+GAP, VIEW3_WIDTH, VIEW3_HEIGHT);
     
     glutSetWindow(View1);
     // Setup ARgsub_lite library for current OpenGL context.
@@ -453,25 +456,21 @@ int main(int argc, char** argv)
     // NB: mainLoop() is registered by Visibility.
     glutSetWindow(window);
     glutDisplayFunc(Main_Display);
-    glutKeyboardFunc(Keyboard);
-
+    //glutReshapeFunc(Reshape);
     
     glutSetWindow(View1);
     glutDisplayFunc(View1_Display);
     glutKeyboardFunc(Keyboard);
 
-    
     glutSetWindow(View2);
-    glutReshapeFunc(Reshape);
+    //glutReshapeFunc(Reshape);
     glutDisplayFunc(View2_Display);
     glutKeyboardFunc(Keyboard);
     
     glutSetWindow(View3);
+    //glutReshapeFunc(Reshape);
     glutDisplayFunc(View3_Display);
-    
-    glutReshapeFunc(Reshape);
-    //glutVisibilityFunc(Visibility);
-    glutKeyboardFunc(Keyboard);
+    //glutKeyboardFunc(Keyboard);
     
     glutMainLoop();
     

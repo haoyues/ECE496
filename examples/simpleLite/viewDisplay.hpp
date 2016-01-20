@@ -53,6 +53,14 @@
 #define FRAME_HEIGHT            480
 #define MAX_OBJECT_AREA         FRAME_HEIGHT*FRAME_WIDTH/1.5
 
+#define VIEW1_WIDTH             615
+#define VIEW1_HEIGHT            460
+#define VIEW2_WIDTH             409
+#define VIEW2_HEIGHT            460
+#define VIEW3_WIDTH             1024
+#define VIEW3_HEIGHT            308
+#define GAP                     5
+
 extern ARHandle		*gARHandle;
 extern int gShowMode;
 
@@ -68,7 +76,6 @@ extern long			gCallCountMarkerDetect;
 extern AR3DHandle	*gAR3DHandle;
 
 extern int NUM_OF_MARKER;
-extern ARMarker *gMarkers;
 
 extern bool rotated;
 extern bool scaled;

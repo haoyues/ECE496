@@ -36,6 +36,23 @@
 
 #define NUM_OF_NUMBER           10
 
+
+typedef struct _furniturePiece
+{
+    GLfloat scale[3];
+    GLfloat translate[3];
+    GLfloat rotate[3];
+    GLuint bufferIdx;
+    int marker;
+    int display;
+}furniturePiece;
+
+typedef enum _drawType
+{
+    INVENTORY,
+    MODEL
+}drawType;
+
 extern std::vector<glm::vec3> vertices[NUM_OF_NUMBER];
 extern std::vector<glm::vec2> uvs[NUM_OF_NUMBER];
 extern std::vector<glm::vec3> normals[NUM_OF_NUMBER];
@@ -44,14 +61,20 @@ extern GLuint uvbuffer[NUM_OF_NUMBER];
 extern GLuint whiteTexture;
 extern GLuint redTexture;
 extern GLuint greenTexture;
+extern GLuint yellowTexture;
 
 //read a set of objects from file
 extern int numofObjects;
+extern int numofPieces;
+extern int totalNumofStep;
 extern std::vector<glm::vec3> *obj_vertices;
 extern std::vector<glm::vec2> *obj_uvs;
 extern std::vector<glm::vec3> *obj_normals;
 extern GLuint *obj_vertexbuffer;
 extern GLuint *obj_uvbuffer;
+extern furniturePiece *pieces;
+extern furniturePiece *model;
+extern furniturePiece **instruction;
 
 extern std::vector<glm::vec3> screw_vertices;
 extern std::vector<glm::vec2> screw_uvs;
@@ -59,10 +82,13 @@ extern std::vector<glm::vec3> screw_normals;
 extern GLuint screw_vertexbuffer;
 extern GLuint screw_uvbuffer;
 
+extern ARMarker *gMarkers;
 
 void DrawText(tablePiece piece);
 void DrawCube();
-void drawFurniture();
+void drawFurniture(furniturePiece *pieces);
+void drawAnimation(int step);
+int loadAnimation(char * filename);
 void loadText();
 void loadCube();
 void loadScrew();
@@ -72,7 +98,7 @@ void loadObject(char * obj_file,
                 std::vector<glm::vec3> *normals,
                 GLuint *vertexbuffer,
                 GLuint *uvbuffer);
-int loadFurnitureObject(char *filename);
+int loadFurnitureObject(char *filename, furniturePiece **pieces);
 void drawObject(GLuint texture, GLuint vertexbuffer, std::vector<glm::vec3> vertices);
 void drawBackground(const float width, const float height, const float x, const float y);
 

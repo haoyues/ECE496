@@ -11,13 +11,23 @@ GLuint uvbuffer[NUM_OF_NUMBER];
 GLuint whiteTexture;
 GLuint redTexture;
 GLuint greenTexture;
+GLuint yellowTexture;
 
 int numofObjects = 0;
+int numofPieces = 0;
+int totalNumofStep = 0;
 std::vector<glm::vec3> *obj_vertices;
 std::vector<glm::vec2> *obj_uvs;
 std::vector<glm::vec3> *obj_normals;
 GLuint *obj_vertexbuffer;
 GLuint *obj_uvbuffer;
+/*GLfloat *obj_scale;
+GLfloat *obj_translate;
+GLfloat *obj_rotate;
+GLuint *bufferIdx;*/
+furniturePiece *pieces = NULL;
+furniturePiece *model = NULL;
+furniturePiece **instruction = NULL;
 
 std::vector<glm::vec3> screw_vertices;
 std::vector<glm::vec2> screw_uvs;
@@ -25,7 +35,9 @@ std::vector<glm::vec3> screw_normals;
 GLuint screw_vertexbuffer;
 GLuint screw_uvbuffer;
 
-static bool cube_loaded = false;
+static bool view2_obj_loaded = false;
+static bool view3_obj_loaded = false;
+static bool animation_loaded = false;
 
 static void print(const char *text, const float x, const float y, int calculateXFromRightEdge, int calculateYFromTopEdge)
 {
@@ -300,7 +312,7 @@ static void mainLoop(void)
         }
         
         //imshow("Threshold",threshold);
-        cv::imshow("after white balancing", res);
+        //cv::imshow("after white balancing", res);
         
         /**********************
          * Opencv part ends
@@ -342,43 +354,6 @@ void View1_Display(void)
     
     // Viewing transformation.
     glLoadIdentity();
-    // Lighting and geometry that moves with the camera should go here.
-    // (I.e. must be specified before viewing transformations.)
-    //none
-    
-    /*if (gPatt_found_1) {*/
-    /*if(TRUE) {
-        
-        m[0] = 1.0;
-        m[1] = 0.0;
-        m[2] = 0.0;
-        m[3] = 0.0;
-        m[4] = 0.0;
-        m[5] = 1.0;
-        m[6] = 0.0;
-        m[7] = 0.0;
-        m[8] = 0.0;
-        m[9] = 0.0;
-        m[10] = 1.0;
-        m[11] = 0.0;
-        m[12] = 0.0;
-        m[13] = -50.0;
-        m[14] = -200.0;
-        m[15] = 1.0;
-        
-        //arglCameraViewRH(gPatt_trans_1, m, VIEW_SCALEFACTOR);
-        
-#ifdef ARDOUBLE_IS_FLOAT
-        glLoadMatrixf(m);
-#else
-        glLoadMatrixd(m);
-#endif
-        
-        // All lighting and geometry to be drawn relative to the marker goes here.
-        //DrawModel();
-        glScalef(20, 20, 20);
-        DrawCube();
-    } // gPatt_foundq*/
     
     int markerIdx;
     for(markerIdx = 0; markerIdx < NUM_OF_MARKER; markerIdx++)
@@ -396,7 +371,7 @@ void View1_Display(void)
             glPushMatrix();
             glRotatef(-90.0, 0.0, 1.0, 0.0);
             glScalef(60, 60, 60);
-            glTranslatef(0.0f, 0.0f, 0.5f);
+            //glTranslatef(0.0f, 0.0f, 0.5f);
             DrawText(gMarkers[markerIdx].piece);
             //DrawCube();
             glPopMatrix();
@@ -406,7 +381,7 @@ void View1_Display(void)
     // Any 2D overlays go here.
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, (GLdouble)windowWidth, 0, (GLdouble)windowHeight, -1.0, 1.0);
+    glOrtho(0, (GLdouble)VIEW1_WIDTH, 0, (GLdouble)VIEW1_HEIGHT, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glDisable(GL_LIGHTING);
@@ -417,7 +392,9 @@ void View1_Display(void)
     //
     if (gShowMode) {
         printMode();
+        printHelpKeys();
     }
+    
     /*if (gShowHelp) {
      if (gShowHelp == 1) {
      printHelpKeys();
@@ -447,7 +424,7 @@ int setupMarker(char *filename)
     int markerCount = 0;
     
     int numofMarker;
-    char name[MAX_PATTERN_NAME_LEN];
+    char name[MAX_NAME_LEN];
     double dimension;
     tablePiece piece;
     markerFile = fopen("Data/marker.txt", "rb");
@@ -488,95 +465,65 @@ int setupMarker(char *filename)
 void View2_Display(void)
 {
     
-    if(!cube_loaded)
+    if(!view2_obj_loaded)
     {
         //load your obj here
+        whiteTexture = loadBMP_custom("Data/mesh/white.bmp");
         redTexture = loadBMP_custom("Data/mesh/red.bmp");
         greenTexture = loadBMP_custom("Data/mesh/green.bmp");
+        yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");
         
-        //loadCube();
+        loadFurnitureObject("Data/furnitureModel.txt", &model);
+        loadAnimation("Data/furnitureAnimation.txt");
 
-        loadFurnitureObject("Data/furniture.txt");
-        cube_loaded = true;
+        view2_obj_loaded = true;
     }
     
-    ARdouble p[16];
-    ARdouble m[16];
-    
     glutPostRedisplay();
-    // Select correct buffer for this context.
-    glDrawBuffer(GL_BACK);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the buffers for new frame.
     
-    // Projection transformation.
-    arglCameraFrustumRH(&(gCparamLT->param), VIEW_DISTANCE_MIN, VIEW_DISTANCE_MAX, p);
-    glMatrixMode(GL_PROJECTION);
-#ifdef ARDOUBLE_IS_FLOAT
-    glLoadMatrixf(p);
-#else
-    glLoadMatrixd(p);
-#endif
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
+    
+    // Set the aspect ratio of the clipping volume to match the viewport
+    glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
+    
+    glLoadIdentity();             // Reset
+    // Enable perspective projection with fovy, aspect, zNear and zFar
+    gluPerspective(45.0f, (float)VIEW2_WIDTH/VIEW2_HEIGHT, 0.1f, 150.0f);
+    
     glMatrixMode(GL_MODELVIEW);
     
     glEnable(GL_DEPTH_TEST);
     
     // Viewing transformation.
     glLoadIdentity();
-    // Lighting and geometry that moves with the camera should go here.
-    // (I.e. must be specified before viewing transformations.)
-    //none
     
-    m[0] = 1.0;
-    m[1] = 0.0;
-    m[2] = 0.0;
-    m[3] = 0.0;
-    m[4] = 0.0;
-    m[5] = 1.0;
-    m[6] = 0.0;
-    m[7] = 0.0;
-    m[8] = 0.0;
-    m[9] = 0.0;
-    m[10] = 1.0;
-    m[11] = 0.0;
-    m[12] = 0.0;
-    m[13] = 0.0;
-    m[14] = -100.0;
-    m[15] = 1.0;
+    gluLookAt(0, 0, 100, 0, 0, 0, 0, 1, 0);
     
-#ifdef ARDOUBLE_IS_FLOAT
-    glLoadMatrixf(m);
-#else
-    glLoadMatrixd(m);
-#endif
+    glRotatef(modelRotateAngle, 0.0, 1.0, 0.0);
+    glScalef(modelScaleFactor, modelScaleFactor, modelScaleFactor);
+
+    if(!gStartAnimation)
+    {
+        drawFurniture(model);
+    }
+    else
+    {
+        /*if(!animation_loaded)
+        {
+            loadAnimation("Data/furnitureAnimation.txt");
+            animation_loaded = true;
+        }*/
         
-    // All lighting and geometry to be drawn relative to the marker goes here.
-    /*glPushMatrix();
-    glScalef(20, 20, 20);
-    DrawCube();
-    glPopMatrix();
-    
-    
-    
-    loadScrew();
-    glPushMatrix();
-    glRotatef(45, 0, 0, 0);
-    glScalef(10, 10, 10);
-    bool found = false;
-    for (int i = 0; i < MAX_COLOUR_NUM; i++) {
-        if (opencvUtilities::gScrews[i].objectFound) {
-            found = true;
-            break;
+        if(gCounter-1 < totalNumofStep)
+        {
+            drawAnimation(gCounter-1);
+        }
+        else
+        {
+             drawFurniture(model);
         }
     }
-    if (found)
-        drawObject(greenTexture, screw_vertexbuffer, screw_vertices);
-    else
-        drawObject(redTexture, screw_vertexbuffer, screw_vertices);
-    glPopMatrix();*/
-    
-    glTranslatef(0.0, -10.0, 0.0);
-    glScalef(10.0, 10.0, 10.0);
-    drawFurniture();
     
     glutSwapBuffers();
 }
@@ -584,11 +531,11 @@ void View2_Display(void)
 void View2_Display_bak(void) {
     int i;
     
-    if(!cube_loaded)
+    if(!view2_obj_loaded)
     {
         //load your obj here
         //loadCube();
-        cube_loaded = true;
+        view2_obj_loaded = true;
     }
     
     glutPostRedisplay();
@@ -621,15 +568,24 @@ void View2_Display_bak(void) {
         {3, 0, 4, 7}, {1, 2, 6, 5}, {4, 5, 6, 7} };
     
     
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
+    
+    // Set the aspect ratio of the clipping volume to match the viewport
+    glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
+    
+    glLoadIdentity();             // Reset
+    // Enable perspective projection with fovy, aspect, zNear and zFar
+    gluPerspective(45.0f, (float)VIEW2_WIDTH/VIEW2_HEIGHT, 0.1f, 100.0f);
+    
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDrawBuffer(GL_BACK);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
     glLoadIdentity();
     
     //view transformation
-    gluLookAt(0, 0, -7.5, 0, 0, 0, 0, 1, 0);
+    //gluLookAt(0, 0, 7.5, 0, 0, 0, 0, 1, 0);
     //change camera position
     //glTranslatef(0, 0, -7.5);
     // Render a color-cube consisting of 6 quads with different colors
@@ -843,228 +799,43 @@ void View2_Display_bak(void) {
     glutSwapBuffers();  // Swap the front and back frame buffers (double buffering)
 }
 
-void View3_Display(void) {
-    int i;
+void View3_Display(void)
+{
+    
+    if(!view3_obj_loaded)
+    {
+        //load your obj here
+        whiteTexture = loadBMP_custom("Data/mesh/white.bmp");
+        redTexture = loadBMP_custom("Data/mesh/red.bmp");
+        greenTexture = loadBMP_custom("Data/mesh/green.bmp");
+        yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");
+        
+        loadFurnitureObject("Data/furnitureInventory.txt", &pieces);
+        view3_obj_loaded = true;
+    }
+    
     glutPostRedisplay();
-    /********************************* SCALE DATA **********************************/
-    const float TABLE_FACE_SCALE_X = 1.0f;//70.0f;
-    const float TABLE_FACE_SCALE_Y = 1.0f;//70.0f;
-    const float TABLE_FACE_SCALE_Z = 0.15f; //10.0f;
-    const float TABLE_LEG_SCALE_X = 0.15f;
-    const float TABLE_LEG_SCALE_Y = 0.15f;
-    const float TABLE_LEG_SCALE_Z = 1.0f;
-    /********************************* CUBE DATA **********************************/
-    const GLfloat cube_vertices [8][3] = {
-        /* +z */ {0.5f, 0.5f, 0.5f}, {0.5f, -0.5f, 0.5f}, {-0.5f, -0.5f, 0.5f}, {-0.5f, 0.5f, 0.5f},
-        /* -z */ {0.5f, 0.5f, -0.5f}, {0.5f, -0.5f, -0.5f}, {-0.5f, -0.5f, -0.5f}, {-0.5f, 0.5f, -0.5f} };
-    const GLubyte cube_vertex_colors_right[8][4] = {
-        {0, 255, 0, 100}, {0, 255, 0, 100}, {0, 255, 0, 100}, {0, 255, 0, 100},
-        {0, 255, 0, 100}, {0, 255, 0, 100}, {0, 255, 0, 100}, {0, 255, 0, 100} };
-    const GLubyte cube_vertex_colors_wrong [8][4] = {
-        {255, 0, 0, 100}, {255, 0, 0, 100}, {255, 0, 0, 100}, {255, 0, 0, 100},
-        {255, 0, 0, 100}, {255, 0, 0, 100}, {255, 0, 0, 100}, {255, 0, 0, 100} };
-    const GLubyte cube_vertex_colors_maybe [8][4] = {
-        {255, 255, 0, 100}, {255, 255, 0, 100}, {255, 255, 0, 100}, {255, 255, 0, 100},
-        {255, 255, 0, 100}, {255, 255, 0, 100}, {255, 255, 0, 100}, {255, 255, 0, 100} };
     
-    const GLubyte cube_vertex_colors [8][4] = {
-        {255, 255, 255, 100}, {255, 255, 255, 100}, {255, 255, 255, 100}, {255, 255, 255, 100},
-        {255, 255, 255, 100}, {255, 255, 255, 100}, {255, 255, 255, 100}, {255, 255, 255, 100} };
-    const GLubyte cube_faces [6][4] = { /* ccw-winding */
-        /* +z */ {3, 2, 1, 0}, /* -y */ {2, 3, 7, 6}, /* +y */ {0, 1, 5, 4},
-        /* -x */ {3, 0, 4, 7}, /* +x */ {1, 2, 6, 5}, /* -z */ {4, 5, 6, 7} };
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, VIEW3_WIDTH, VIEW3_HEIGHT);
     
-    glEnable (GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // Set the aspect ratio of the clipping volume to match the viewport
+    glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
     
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
-    glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
+    glLoadIdentity();             // Reset
+    // Enable perspective projection with fovy, aspect, zNear and zFar
+    gluPerspective(45.0f, (float)VIEW3_WIDTH/VIEW3_HEIGHT, 0.1f, 100.0f);
     
-    // Render a color-cube consisting of 6 quads with different colors
+    glMatrixMode(GL_MODELVIEW);
     
-    glPushMatrix();
-    //rotate the table face is marker 1 is found, i.e. the orientation is wrong
-    if(gMarkers[1].gPatt_found)
-    {
-        glRotatef(gDrawRotateTableAngle, 1.0f, 0.0f, 0.0f);
-    }
-    else
-    {
-        gDrawRotateTableAngle = 0.0f;
-    }
-    if(foundPattern())
-    {
-        if(gMarkers[0].gPatt_found)
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_right);
-        }
-        else if(gMarkers[1].gPatt_found)
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_maybe);
-        }
-        else
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_wrong);
-        }
-    }
-    else
-    {
-        glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors);
-    }
-    // Reset the model-view matrix
-    glTranslatef(-1.5f, -0.2f, -2.0f);  // Move right and into the screen
-    //glRotatef(-90.0, 1.0f, 0.0f, 0.0f);
-    glScalef(TABLE_FACE_SCALE_X, TABLE_FACE_SCALE_Y, TABLE_FACE_SCALE_Z);
+    glEnable(GL_DEPTH_TEST);
     
-    glVertexPointer(3, GL_FLOAT, 0, cube_vertices);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glDisableClientState(GL_COLOR_ARRAY);
-    glColor4ub(0, 0, 0, 255);
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glPopMatrix();
+    // Viewing transformation.
+    glLoadIdentity();
     
-    /********************************* TABLE LEG1 **********************************/
-    glPushMatrix();
-    glTranslatef(-0.5f, -0.2f, -2.0f);
-    glRotatef(90.0, 1.0f, 0.0f, 0.0f);
-    glScalef(TABLE_LEG_SCALE_X, TABLE_LEG_SCALE_Y, TABLE_LEG_SCALE_Z);
+    gluLookAt(0, 0, 100, 0, 0, 0, 0, 1, 0);
     
-    if(foundPattern())
-    {
-        if(gMarkers[2].gPatt_found)
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_right);
-        }
-        else
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_wrong);
-        }
-    }
-    else
-    {
-        glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors);
-    }
+    drawFurniture(pieces);
     
-    glVertexPointer(3, GL_FLOAT, 0, cube_vertices);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glDisableClientState(GL_COLOR_ARRAY);
-    glColor4ub(0, 0, 0, 255);
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glPopMatrix();
-    
-    /********************************* TABLE LEG2 **********************************/
-    glPushMatrix();
-    glTranslatef(0.0f, -0.2f, -2.0f);
-    glRotatef(90.0, 1.0f, 0.0f, 0.0f);
-    glScalef(TABLE_LEG_SCALE_X, TABLE_LEG_SCALE_Y, TABLE_LEG_SCALE_Z);
-    
-    if(foundPattern())
-    {
-        if(gMarkers[3].gPatt_found)
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_right);
-        }
-        else
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_wrong);
-        }
-    }
-    else
-    {
-        glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors);
-    }
-    glVertexPointer(3, GL_FLOAT, 0, cube_vertices);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glDisableClientState(GL_COLOR_ARRAY);
-    glColor4ub(0, 0, 0, 255);
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glPopMatrix();
-    
-    /********************************* TABLE LEG3 **********************************/
-    glPushMatrix();
-    glTranslatef(0.5f, -0.2f, -2.0f);
-    glRotatef(90.0, 1.0f, 0.0f, 0.0f);
-    glScalef(TABLE_LEG_SCALE_X, TABLE_LEG_SCALE_Y, TABLE_LEG_SCALE_Z);
-    
-    if(foundPattern())
-    {
-        if(gMarkers[4].gPatt_found)
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_right);
-        }
-        else
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_wrong);
-        }
-    }
-    else
-    {
-        glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors);
-    }
-    glVertexPointer(3, GL_FLOAT, 0, cube_vertices);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glDisableClientState(GL_COLOR_ARRAY);
-    glColor4ub(0, 0, 0, 255);
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glPopMatrix();
-    /********************************* TABLE LEG4 **********************************/
-    glPushMatrix();
-    glTranslatef(1.0f, -0.2f, -2.0f);
-    glRotatef(90.0, 1.0f, 0.0f, 0.0f);
-    glScalef(TABLE_LEG_SCALE_X, TABLE_LEG_SCALE_Y, TABLE_LEG_SCALE_Z);
-    
-    if(foundPattern())
-    {
-        if(gMarkers[5].gPatt_found)
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_right);
-        }
-        else
-        {
-            glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors_wrong);
-        }
-    }
-    else
-    {
-        glColorPointer(4, GL_UNSIGNED_BYTE, 0, cube_vertex_colors);
-    }
-    glVertexPointer(3, GL_FLOAT, 0, cube_vertices);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glDisableClientState(GL_COLOR_ARRAY);
-    glColor4ub(0, 0, 0, 255);
-    for (i = 0; i < 6; i++) {
-        glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_BYTE, &(cube_faces[i][0]));
-    }
-    glPopMatrix();
-    
-    glutSwapBuffers();  // Swap the front and back frame buffers (double buffering)
+    glutSwapBuffers();
 }
