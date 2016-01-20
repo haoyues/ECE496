@@ -1,4 +1,0 @@
-Count=3
-Name=Data/mesh/table_top.obj
-Name=Data/mesh/leg.obj
-Name=Data/mesh/screw.obj
