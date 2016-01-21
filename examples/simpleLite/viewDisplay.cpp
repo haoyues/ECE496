@@ -181,7 +181,7 @@ static void DrawModelUpdate(float timeDelta)
             speed = 0.0;
             gDrawTranslateLeg1 = FALSE;
             gDrawTranslateLeg2 = TRUE;
-            gStartAnimation = FALSE;
+            //gStartAnimation = FALSE;
         }
         gDrawTranslateDistanceLeg1 += timeDelta * speed; // Translate cube at 0.1 pixels per second.
     }
@@ -505,6 +505,7 @@ void View2_Display(void)
 
     if(!gStartAnimation)
     {
+        printf("start animation is: %d\n", gStartAnimation);
         drawFurniture(model);
     }
     else
@@ -517,6 +518,7 @@ void View2_Display(void)
         
         if(gCounter-1 < totalNumofStep)
         {
+            printf("gCounter is: %d\n", gCounter);
             drawAnimation(gCounter-1);
         }
         else
