@@ -7,6 +7,7 @@
 //
 
 #include "drawUtilities.hpp"
+#include "opencvUtilities.hpp"
 
 void DrawText(tablePiece piece)
 {
@@ -41,6 +42,11 @@ void DrawText(tablePiece piece)
 void drawFurniture(furniturePiece *pieces)
 {
     int i;
+    
+    for (i = 0; i < MAX_COLOUR_NUM; i++) {
+        opencvUtilities::gScrews[i].numbersShown = 0;
+    }
+    
     for(i = 0; i < numofPieces; i++)
     {
         if(pieces[i].display)
@@ -61,6 +67,16 @@ void drawFurniture(furniturePiece *pieces)
             if(pieces[i].marker != -1 && gMarkers[pieces[i].marker].gPatt_found)
             {
                 drawObject(yellowTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx]);
+            }
+            else if (pieces[i].marker == -1 && opencvUtilities::gScrews[pieces[i].color].objectFound) {
+                if (opencvUtilities::gScrews[pieces[i].color].numbersShown <
+                    opencvUtilities::gScrews[pieces[i].color].numbersToShow) {
+                    drawObject(yellowTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx]);
+                    opencvUtilities::gScrews[pieces[i].color].numbersShown ++;
+                    printf("numbersToShow: %d, numbersShown: %d\n", opencvUtilities::gScrews[pieces[i].color].numbersToShow, opencvUtilities::gScrews[pieces[i].color].numbersShown);
+                } else {
+                    drawObject(whiteTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx]);
+                }
             }
             else
             {
@@ -235,7 +251,7 @@ int loadFurnitureObject(char *filename, furniturePiece **pieces)
     
     while (!feof(furnitureObjFile))
     {
-        if (fscanf(furnitureObjFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f Marker=%d Display=%d\n",
+        if (fscanf(furnitureObjFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f Marker=%d Display=%d Color=%d\n",
                    name,
                    &(*pieces)[pieceIdx].scale[0],
                    &(*pieces)[pieceIdx].scale[1],
@@ -247,7 +263,8 @@ int loadFurnitureObject(char *filename, furniturePiece **pieces)
                    &(*pieces)[pieceIdx].rotate[1],
                    &(*pieces)[pieceIdx].rotate[2],
                    &(*pieces)[pieceIdx].marker,
-                   &(*pieces)[pieceIdx].display) != 12)
+                   &(*pieces)[pieceIdx].display,
+                   &(*pieces)[pieceIdx].color) != 13)
         {
             // found a line that does match this pattern: try again later, the file might be currently written
             perror("error");

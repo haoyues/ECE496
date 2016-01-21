@@ -45,6 +45,7 @@ typedef struct _furniturePiece
     GLuint bufferIdx;
     int marker;
     int display;
+    int color;
 }furniturePiece;
 
 typedef enum _drawType

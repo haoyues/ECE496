@@ -81,12 +81,3 @@ Scalar ColoredObj::getBGRmax() {
 Scalar ColoredObj::getBGRmin() {
     return BGRmin;
 }
-
-int ColoredObj::getNumbersToShow() {
-    return numbersToShow;
-}
-
-void ColoredObj::setNumbersToShow(int num) {
-    numbersToShow = num;
-}
-

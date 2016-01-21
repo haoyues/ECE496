@@ -80,13 +80,13 @@ void opencvUtilities::trackFilteredObject(int objectIndex, Mat threshold, Mat &c
                     count++;
                     gScrews[objectIndex].objectFound = true;
                     
-                } else
-                    gScrews[objectIndex].objectFound = false;
-                
-                
+                } else {
+                    if (count == 0)
+                        gScrews[objectIndex].objectFound = false;
+                }
             }
             
-            gScrews[objectIndex].setNumbersToShow(count);
+            gScrews[objectIndex].numbersToShow = count;
             
             //let user know you found an object
             if(gScrews[objectIndex].objectFound == true){

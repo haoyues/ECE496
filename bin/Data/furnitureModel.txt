@@ -1,10 +1,10 @@
 Count=3 Piece Count=9
-Name=Data/mesh/table_top.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=0.0 TransY=20.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=0 Display=1
-Name=Data/mesh/leg.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=-15.0 TransY=-5.0 TransZ=-15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=2 Display=1
-Name=Data/mesh/leg.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=15.0 TransY=-5.0 TransZ=-15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=3 Display=1
-Name=Data/mesh/leg.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=-15.0 TransY=-5.0 TransZ=15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=4 Display=1
-Name=Data/mesh/leg.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=15.0 TransY=-5.0 TransZ=15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=5 Display=1
-Name=Data/mesh/screw.obj ScaleX=2.0 ScaleY=4.0 ScaleZ=2.0 TransX=60.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 Marker=-1 Display=0
-Name=Data/mesh/screw.obj ScaleX=2.0 ScaleY=4.0 ScaleZ=2.0 TransX=60.0 TransY=-10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 Marker=-1 Display=0
-Name=Data/mesh/screw.obj ScaleX=2.0 ScaleY=4.0 ScaleZ=2.0 TransX=90.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 Marker=-1 Display=0
-Name=Data/mesh/screw.obj ScaleX=2.0 ScaleY=4.0 ScaleZ=2.0 TransX=90.0 TransY=-10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 Marker=-1 Display=0
+Name=Data/mesh/table_top.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=0.0 TransY=20.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=0 Display=1 Color=-1
+Name=Data/mesh/leg.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=-15.0 TransY=-5.0 TransZ=-15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=2 Display=1 Color=-1
+Name=Data/mesh/leg.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=15.0 TransY=-5.0 TransZ=-15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=3 Display=1 Color=-1
+Name=Data/mesh/leg.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=-15.0 TransY=-5.0 TransZ=15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=4 Display=1 Color=-1
+Name=Data/mesh/leg.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=15.0 TransY=-5.0 TransZ=15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 Marker=5 Display=1 Color=-1
+Name=Data/mesh/screw.obj ScaleX=2.0 ScaleY=4.0 ScaleZ=2.0 TransX=60.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 Marker=-1 Display=0 Color=0
+Name=Data/mesh/screw.obj ScaleX=2.0 ScaleY=4.0 ScaleZ=2.0 TransX=90.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 Marker=-1 Display=0 Color=0
+Name=Data/mesh/screw.obj ScaleX=2.0 ScaleY=4.0 ScaleZ=2.0 TransX=60.0 TransY=-10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 Marker=-1 Display=0 Color=1
+Name=Data/mesh/screw.obj ScaleX=2.0 ScaleY=4.0 ScaleZ=2.0 TransX=90.0 TransY=-10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 Marker=-1 Display=0 Color=2

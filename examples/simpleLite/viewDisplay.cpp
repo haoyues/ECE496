@@ -312,7 +312,7 @@ static void mainLoop(void)
         }
         
         //imshow("Threshold",threshold);
-        //cv::imshow("after white balancing", res);
+        cv::imshow("after white balancing", res);
         
         /**********************
          * Opencv part ends

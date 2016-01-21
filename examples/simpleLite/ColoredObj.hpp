@@ -19,6 +19,9 @@ using namespace cv;
 class ColoredObj {
 public:
     bool objectFound = false;
+    int numbersShown = 0;
+    int numbersToShow;
+    
     ColoredObj();
     ColoredObj(string type_);
     ~ColoredObj();
@@ -37,15 +40,11 @@ public:
     
     void setBGRmin(Scalar BGR);
     void setBGRmax(Scalar BGR);
-    
-    int getNumbersToShow();
-    void setNumbersToShow(int num);
-    
+        
 private:
     int xPos, yPos;
     string type;
     Scalar BGRmin, BGRmax;
-    int numbersToShow;
 };
 
 #endif /* ColoredObj_hpp */
