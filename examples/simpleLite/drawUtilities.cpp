@@ -134,7 +134,7 @@ int loadAnimation(char * filename)
     
     while (!feof(animationFile))
     {
-        if (fscanf(animationFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f Marker=%d Display=%d\n",
+        if (fscanf(animationFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f Marker=%d Display=%d Color=%d\n",
                    name,
                    &(instruction[step][pieceIdx].scale[0]),
                    &(instruction[step][pieceIdx].scale[1]),
@@ -146,7 +146,8 @@ int loadAnimation(char * filename)
                    &(instruction[step][pieceIdx].rotate[1]),
                    &(instruction[step][pieceIdx].rotate[2]),
                    &(instruction[step][pieceIdx].marker),
-                   &(instruction[step][pieceIdx].display)) == 12)
+                   &(instruction[step][pieceIdx].display),
+                   &(instruction[step][pieceIdx].color)) == 13)
         {
             pieceIdx++;
         }
