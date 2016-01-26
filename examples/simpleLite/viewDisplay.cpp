@@ -28,6 +28,8 @@ GLuint *bufferIdx;*/
 furniturePiece *pieces = NULL;
 furniturePiece *model = NULL;
 furniturePiece **instruction = NULL;
+float **translated;
+bool *startValueStored;
 
 std::vector<glm::vec3> screw_vertices;
 std::vector<glm::vec2> screw_uvs;
@@ -468,7 +470,7 @@ void View2_Display(void)
     if(!view2_obj_loaded)
     {
         //load your obj here
-        whiteTexture = loadBMP_custom("Data/mesh/white.bmp");
+        whiteTexture = loadBMP_custom("Data/mesh/wood.bmp");
         redTexture = loadBMP_custom("Data/mesh/red.bmp");
         greenTexture = loadBMP_custom("Data/mesh/green.bmp");
         yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");
@@ -807,7 +809,7 @@ void View3_Display(void)
     if(!view3_obj_loaded)
     {
         //load your obj here
-        whiteTexture = loadBMP_custom("Data/mesh/white.bmp");
+        whiteTexture = loadBMP_custom("Data/mesh/wood.bmp");
         redTexture = loadBMP_custom("Data/mesh/red.bmp");
         greenTexture = loadBMP_custom("Data/mesh/green.bmp");
         yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");

@@ -35,7 +35,7 @@
 
 
 #define NUM_OF_NUMBER           10
-
+#define ANIMATION_SPEED         0.5
 
 typedef struct _furniturePiece
 {
@@ -76,6 +76,8 @@ extern GLuint *obj_uvbuffer;
 extern furniturePiece *pieces;
 extern furniturePiece *model;
 extern furniturePiece **instruction;
+extern float **translated;
+extern bool *startValueStored;
 
 extern std::vector<glm::vec3> screw_vertices;
 extern std::vector<glm::vec2> screw_uvs;
@@ -100,7 +102,7 @@ void loadObject(char * obj_file,
                 GLuint *vertexbuffer,
                 GLuint *uvbuffer);
 int loadFurnitureObject(char *filename, furniturePiece **pieces);
-void drawObject(GLuint texture, GLuint vertexbuffer, std::vector<glm::vec3> vertices);
+void drawObject(GLuint texture, GLuint vertexbuffer, GLuint uvbuffer, std::vector<glm::vec3> vertices, std::vector<glm::vec2> uvs);
 void drawBackground(const float width, const float height, const float x, const float y);
 
 

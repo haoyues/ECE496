@@ -239,9 +239,6 @@ static void Keyboard(unsigned char key, int x, int y)
             exit(0);
             break;
         case ' ':
-            //gDrawRotate = !gDrawRotate;
-            gStartAnimation = TRUE;
-            gCounter++;
             break;
         case 'X':
         case 'x':
@@ -311,6 +308,14 @@ static void Keyboard(unsigned char key, int x, int y)
         case 'R':
             modelRotateAngle -= 5.0;
             rotated = false;
+            break;
+        case 'n':
+            //gDrawRotate = !gDrawRotate;
+            gStartAnimation = TRUE;
+            gCounter++;
+            break;
+        case 'p':
+            gCounter--;
             break;
         default:
             break;
