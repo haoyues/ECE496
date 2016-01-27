@@ -360,7 +360,7 @@ static void Reshape(int w, int h)
 //
 static void Main_Display(void)
 {
-    glClearColor(0.8, 0.8, 0.8, 1.0);
+    glClearColor(BACKGROUND_R_v2, BACKGROUND_G_v2, BACKGROUND_B_v2, 0.5f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glutSwapBuffers();
@@ -466,7 +466,7 @@ int main(int argc, char** argv)
     glutSetWindow(View1);
     glutDisplayFunc(View1_Display);
     glutKeyboardFunc(Keyboard);
-
+    
     glutSetWindow(View2);
     //glutReshapeFunc(Reshape);
     glutDisplayFunc(View2_Display);

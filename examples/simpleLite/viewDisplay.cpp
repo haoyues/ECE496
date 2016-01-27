@@ -314,7 +314,7 @@ static void mainLoop(void)
         }
         
         //imshow("Threshold",threshold);
-        cv::imshow("after white balancing", res);
+        //cv::imshow("after white balancing", res);
         
         /**********************
          * Opencv part ends
@@ -483,7 +483,12 @@ void View2_Display(void)
     
     glutPostRedisplay();
     
+    glClearColor(BACKGROUND_R_v2, BACKGROUND_G_v2, BACKGROUND_B_v2, BACKGROUND_alpha);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    //glutSwapBuffers();
+
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
     
     // Set the aspect ratio of the clipping volume to match the viewport
@@ -820,6 +825,7 @@ void View3_Display(void)
     
     glutPostRedisplay();
     
+    glClearColor(BACKGROUND_R_v3, BACKGROUND_G_v3, BACKGROUND_B_v3, BACKGROUND_alpha);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, VIEW3_WIDTH, VIEW3_HEIGHT);
     

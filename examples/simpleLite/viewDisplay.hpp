@@ -53,6 +53,13 @@
 #define FRAME_HEIGHT            480
 #define MAX_OBJECT_AREA         FRAME_HEIGHT*FRAME_WIDTH/1.5
 
+#define BACKGROUND_R_v2            0.686f
+#define BACKGROUND_G_v2            0.851f
+#define BACKGROUND_B_v2            0.902f
+#define BACKGROUND_alpha           0.0f
+#define BACKGROUND_R_v3            1.0f
+#define BACKGROUND_G_v3            0.749f
+#define BACKGROUND_B_v3            0.769f
 #define VIEW1_WIDTH             615
 #define VIEW1_HEIGHT            460
 #define VIEW2_WIDTH             409
