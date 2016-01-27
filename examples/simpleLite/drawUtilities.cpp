@@ -122,12 +122,27 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
             opencvUtilities::gScrews[piece_end.color].numbersShown ++;
             printf("numbersToShow: %d, numbersShown: %d\n", opencvUtilities::gScrews[piece_end.color].numbersToShow, opencvUtilities::gScrews[piece_end.color].numbersShown);
         } else {
-            drawObject(whiteTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+            
+            if(piece_end.marker != -1)
+            {
+                drawObject(whiteTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+            }
+            else
+            {
+                drawObject(greenTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+            }
         }
     }
     else
     {
-        drawObject(whiteTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+        if(piece_end.marker != -1)
+        {
+            drawObject(whiteTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+        }
+        else
+        {
+            drawObject(greenTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+        }
     }
     
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -173,12 +188,27 @@ void drawFurniture(furniturePiece *pieces)
                     opencvUtilities::gScrews[pieces[i].color].numbersShown ++;
                     printf("numbersToShow: %d, numbersShown: %d\n", opencvUtilities::gScrews[pieces[i].color].numbersToShow, opencvUtilities::gScrews[pieces[i].color].numbersShown);
                 } else {
-                    drawObject(whiteTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
+                    
+                    if(i >= 5)
+                    {
+                        drawObject(greenTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
+                    }
+                    else
+                    {
+                         drawObject(whiteTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
+                    }
                 }
             }
             else
             {
-                drawObject(whiteTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
+                if(i >= 5)
+                {
+                    drawObject(greenTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
+                }
+                else
+                {
+                    drawObject(whiteTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
+                }
             }
         
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

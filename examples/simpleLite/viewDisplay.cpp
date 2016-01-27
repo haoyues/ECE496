@@ -225,7 +225,7 @@ void loadObjects(void)
 {
     //whiteTexture = loadBMP_custom("Data/mesh/white.bmp");
     redTexture = loadBMP_custom("Data/mesh/red.bmp");
-    greenTexture = loadBMP_custom("Data/mesh/green.bmp");
+    greenTexture = loadBMP_custom("Data/mesh/silver.bmp");
     
     loadText();
 }
@@ -472,7 +472,7 @@ void View2_Display(void)
         //load your obj here
         whiteTexture = loadBMP_custom("Data/mesh/wood.bmp");
         redTexture = loadBMP_custom("Data/mesh/red.bmp");
-        greenTexture = loadBMP_custom("Data/mesh/green.bmp");
+        greenTexture = loadBMP_custom("Data/mesh/silver.bmp");
         yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");
         
         loadFurnitureObject("Data/furnitureModel.txt", &model);
@@ -816,7 +816,7 @@ void View3_Display(void)
         //load your obj here
         whiteTexture = loadBMP_custom("Data/mesh/wood.bmp");
         redTexture = loadBMP_custom("Data/mesh/red.bmp");
-        greenTexture = loadBMP_custom("Data/mesh/green.bmp");
+        greenTexture = loadBMP_custom("Data/mesh/silver.bmp");
         yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");
         
         loadFurnitureObject("Data/furnitureInventory.txt", &pieces);
