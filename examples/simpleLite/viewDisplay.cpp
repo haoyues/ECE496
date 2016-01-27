@@ -8,9 +8,8 @@ std::vector<glm::vec2> uvs[NUM_OF_NUMBER];
 std::vector<glm::vec3> normals[NUM_OF_NUMBER];
 GLuint vertexbuffer[NUM_OF_NUMBER];
 GLuint uvbuffer[NUM_OF_NUMBER];
-GLuint whiteTexture;
+GLuint woodTexture;
 GLuint redTexture;
-GLuint greenTexture;
 GLuint yellowTexture;
 
 int numofObjects = 0;
@@ -223,9 +222,7 @@ static void DrawModelUpdate(float timeDelta)
 
 void loadObjects(void)
 {
-    //whiteTexture = loadBMP_custom("Data/mesh/white.bmp");
-    redTexture = loadBMP_custom("Data/mesh/red.bmp");
-    greenTexture = loadBMP_custom("Data/mesh/silver.bmp");
+    opencvUtilities::loadScrewsTexture();
     
     loadText();
 }
@@ -470,10 +467,11 @@ void View2_Display(void)
     if(!view2_obj_loaded)
     {
         //load your obj here
-        whiteTexture = loadBMP_custom("Data/mesh/wood.bmp");
+        woodTexture = loadBMP_custom("Data/mesh/wood.bmp");
         redTexture = loadBMP_custom("Data/mesh/red.bmp");
-        greenTexture = loadBMP_custom("Data/mesh/silver.bmp");
         yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");
+        
+        opencvUtilities::loadScrewsTexture();
         
         loadFurnitureObject("Data/furnitureModel.txt", &model);
         loadAnimation("Data/furnitureAnimation.txt");
@@ -814,10 +812,12 @@ void View3_Display(void)
     if(!view3_obj_loaded)
     {
         //load your obj here
-        whiteTexture = loadBMP_custom("Data/mesh/wood.bmp");
+        woodTexture = loadBMP_custom("Data/mesh/wood.bmp");
         redTexture = loadBMP_custom("Data/mesh/red.bmp");
-        greenTexture = loadBMP_custom("Data/mesh/silver.bmp");
         yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");
+        
+        opencvUtilities::loadScrewsTexture();
+
         
         loadFurnitureObject("Data/furnitureInventory.txt", &pieces);
         view3_obj_loaded = true;

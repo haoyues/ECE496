@@ -59,9 +59,8 @@ extern std::vector<glm::vec2> uvs[NUM_OF_NUMBER];
 extern std::vector<glm::vec3> normals[NUM_OF_NUMBER];
 extern GLuint vertexbuffer[NUM_OF_NUMBER];
 extern GLuint uvbuffer[NUM_OF_NUMBER];
-extern GLuint whiteTexture;
+extern GLuint woodTexture;
 extern GLuint redTexture;
-extern GLuint greenTexture;
 extern GLuint yellowTexture;
 
 //read a set of objects from file

@@ -125,11 +125,11 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
             
             if(piece_end.marker != -1)
             {
-                drawObject(whiteTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+                drawObject(woodTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
             }
             else
             {
-                drawObject(greenTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+                drawObject(opencvUtilities::silverTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
             }
         }
     }
@@ -137,11 +137,11 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
     {
         if(piece_end.marker != -1)
         {
-            drawObject(whiteTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+            drawObject(woodTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
         }
         else
         {
-            drawObject(greenTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+            drawObject(opencvUtilities::silverTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
         }
     }
     
@@ -184,30 +184,23 @@ void drawFurniture(furniturePiece *pieces)
             else if (pieces[i].marker == -1 && opencvUtilities::gScrews[pieces[i].color].objectFound) {
                 if (opencvUtilities::gScrews[pieces[i].color].numbersShown <
                     opencvUtilities::gScrews[pieces[i].color].numbersToShow) {
-                    drawObject(yellowTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
+                    // Colour detected, need to highlight
+                    drawObject(opencvUtilities::silverTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
                     opencvUtilities::gScrews[pieces[i].color].numbersShown ++;
-                    printf("numbersToShow: %d, numbersShown: %d\n", opencvUtilities::gScrews[pieces[i].color].numbersToShow, opencvUtilities::gScrews[pieces[i].color].numbersShown);
                 } else {
-                    
-                    if(i >= 5)
-                    {
-                        drawObject(greenTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
-                    }
-                    else
-                    {
-                         drawObject(whiteTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
-                    }
+                    // No need to highlight, show original colour
+                    drawObject(opencvUtilities::gTextures[pieces[i].color], obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
                 }
             }
             else
             {
-                if(i >= 5)
+                if(pieces[i].color != -1)
                 {
-                    drawObject(greenTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
+                    drawObject(opencvUtilities::gTextures[pieces[i].color], obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
                 }
                 else
                 {
-                    drawObject(whiteTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
+                    drawObject(woodTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
                 }
             }
         

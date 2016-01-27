@@ -7,9 +7,20 @@
 //
 
 #include "opencvUtilities.hpp"
+#include "viewDisplay.hpp"
 
 ColoredObj opencvUtilities::gScrews[MAX_COLOUR_NUM];
 string opencvUtilities::gScrewTypes[MAX_COLOUR_NUM] = {"red", "green", "yellow"};
+GLuint opencvUtilities::gTextures[MAX_COLOUR_NUM];
+GLuint opencvUtilities::silverTexture;
+
+void opencvUtilities::loadScrewsTexture() {
+    opencvUtilities::gTextures[0] = loadBMP_custom("Data/mesh/red.bmp");
+    opencvUtilities::gTextures[1] = loadBMP_custom("Data/mesh/green.bmp");
+    opencvUtilities::gTextures[2] = loadBMP_custom("Data/mesh/yellow.bmp");
+    silverTexture = loadBMP_custom("Data/mesh/silver.bmp");
+
+}
 
 string opencvUtilities::intToString(int number){
     std::stringstream ss;
