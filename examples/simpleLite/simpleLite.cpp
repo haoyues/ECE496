@@ -122,6 +122,9 @@ float gDrawTranslateDistanceLeg3 = 0;
 float gDrawTranslateDistanceLeg4 = 0;
 
 int gCounter = 0;
+
+bool welcomed = false;
+bool windowNotSplit = true;
 /********************** ANIMATION **********************/
 
 
@@ -358,54 +361,160 @@ static void Reshape(int w, int h)
 //
 // This function is called when the window needs redrawing.
 //
-static void Main_Display(void)
-{
+
+static void Main_Display(void) {
     glClearColor(BACKGROUND_R_v2, BACKGROUND_G_v2, BACKGROUND_B_v2, 0.5f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glutSwapBuffers();
 }
 
+static void Welcome_Display(void)
+{
+    if (!welcomed) {
+        glClearColor(BACKGROUND_R_v3, BACKGROUND_G_v3, BACKGROUND_B_v3, 0.5f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+        glutSwapBuffers();
+        welcomed = true;
+        glutPostRedisplay();
+        //glutKeyboardFunc(Keyboard);
+
+    } else if (windowNotSplit){
+
+        sleep(2);
+        
+        windowNotSplit = false;
+        
+        char glutGamemode[32];
+        char cparam_name[] = "Data/external_camera_para.dat";
+        char markerFilename[] = "Data/marker.txt";
+        char vconf[] = "";
+        
+        //
+        // Marker setup.
+        //
+        
+        char cwd[1024];
+        if (getcwd(cwd, sizeof(cwd)) != NULL)
+            fprintf(stdout, "Current working dir: %s\n", cwd);
+        
+        
+        if(!setupMarker(markerFilename))
+        {
+            ARLOGe("main(): Unable to set up AR markers.\n");
+            exit(-1);
+        }
+        
+        //
+        // Video setup.
+        //
+        
+        if (!setupCamera(cparam_name, vconf, &gCparamLT, &gARHandle, &gAR3DHandle)) {
+            ARLOGe("main(): Unable to set up AR camera.\n");
+            exit(-1);
+        }
+        
+        //
+        // Graphics setup.
+        //
+        
+        // Set up GL context(s) for OpenGL to draw into.
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+        if (!windowed) {
+            if (windowRefresh) sprintf(glutGamemode, "%ix%i:%i@%i", windowWidth, windowHeight, windowDepth, windowRefresh);
+            else sprintf(glutGamemode, "%ix%i:%i", windowWidth, windowHeight, windowDepth);
+            glutGameModeString(glutGamemode);
+            glutEnterGameMode();
+        } else {
+            glutInitWindowSize(windowWidth, windowHeight);
+            window = glutCreateWindow("HELLO");
+            //glutCreateWindow(argv[0]);
+        }
+        
+        //define the position of the views
+        
+         View1 = glutCreateSubWindow(window, 0, 0, VIEW1_WIDTH, VIEW1_HEIGHT);
+         View2 = glutCreateSubWindow(window, VIEW1_WIDTH+GAP, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
+         View3 = glutCreateSubWindow(window, 0, VIEW2_HEIGHT+GAP, VIEW3_WIDTH, VIEW3_HEIGHT);
+        
+        glutSetWindow(View1);
+        
+        // Setup ARgsub_lite library for current OpenGL context.
+        if ((gArglSettings = arglSetupForCurrentContext(&(gCparamLT->param), arVideoGetPixelFormat())) == NULL) {
+            ARLOGe("main(): arglSetupForCurrentContext() returned error.\n");
+            cleanup();
+            exit(-1);
+        }
+        arglSetupDebugMode(gArglSettings, gARHandle);
+        arUtilTimerReset();
+        
+        // Load marker(s).
+        if ((gARPattHandle = arPattCreateHandle()) == NULL) {
+            ARLOGe("setupMarker(): Error: arPattCreateHandle.\n");
+            cleanup();
+            exit(-1);
+        }
+        
+        int markerIdx;
+        for(markerIdx = 0; markerIdx < NUM_OF_MARKER; markerIdx++)
+        {
+            if(gMarkers[markerIdx].gPatt_name == NULL)
+            {
+                break;
+            }
+            if ((gMarkers[markerIdx].gPatt_id = arPattLoad(gARPattHandle, gMarkers[markerIdx].gPatt_name)) < 0) {
+                ARLOGe("setupMarker(): Error loading pattern file %s.\n", gMarkers[markerIdx].gPatt_name);
+                arPattDeleteHandle(gARPattHandle);
+                cleanup();
+                exit(-1);
+            }
+            arPattAttach(gARHandle, gARPattHandle);
+        }
+        
+        loadObjects();
+        
+        // Register GLUT event-handling callbacks.
+        // NB: mainLoop() is registered by Visibility.
+        glutSetWindow(window);
+        glutDisplayFunc(Main_Display);
+        //glutReshapeFunc(Reshape);
+        
+         glutSetWindow(View1);
+         glutDisplayFunc(View1_Display);
+         glutKeyboardFunc(Keyboard);
+         
+         glutSetWindow(View2);
+         //glutReshapeFunc(Reshape);
+         glutDisplayFunc(View2_Display);
+         glutKeyboardFunc(Keyboard);
+         
+         glutSetWindow(View3);
+         //glutReshapeFunc(Reshape);
+         glutDisplayFunc(View3_Display);
+         //glutKeyboardFunc(Keyboard);
+        
+        glutMainLoop();
+        
+    } else {
+        glClearColor(BACKGROUND_R_v3, BACKGROUND_G_v3, BACKGROUND_B_v3, 0.5f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        glutSwapBuffers();
+    }
+
+
+}
+
 int main(int argc, char** argv)
 {
-    char glutGamemode[32];
-    char cparam_name[] = "Data/external_camera_para.dat";
-    char markerFilename[] = "Data/marker.txt";
-    char vconf[] = "";
     
+    char glutGamemode[32];
     //
     // Library inits.
     //
     
     glutInit(&argc, argv);
-    
-    //
-    // Marker setup.
-    //
-    
-    char cwd[1024];
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
-        fprintf(stdout, "Current working dir: %s\n", cwd);
-    
-    
-    if(!setupMarker(markerFilename))
-    {
-        ARLOGe("main(): Unable to set up AR markers.\n");
-        exit(-1);
-    }
-    
-    //
-    // Video setup.
-    //
-    
-    if (!setupCamera(cparam_name, vconf, &gCparamLT, &gARHandle, &gAR3DHandle)) {
-        ARLOGe("main(): Unable to set up AR camera.\n");
-        exit(-1);
-    }
-    
-    //
-    // Graphics setup.
-    //
     
     // Set up GL context(s) for OpenGL to draw into.
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -416,67 +525,11 @@ int main(int argc, char** argv)
         glutEnterGameMode();
     } else {
         glutInitWindowSize(windowWidth, windowHeight);
-        window = glutCreateWindow(argv[0]);
+        //window = glutCreateWindow(argv[0]);
+        glutCreateWindow(argv[0]);
     }
-    
-    //define the position of the views
-    View1 = glutCreateSubWindow(window, 0, 0, VIEW1_WIDTH, VIEW1_HEIGHT);
-    View2 = glutCreateSubWindow(window, VIEW1_WIDTH+GAP, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
-    View3 = glutCreateSubWindow(window, 0, VIEW2_HEIGHT+GAP, VIEW3_WIDTH, VIEW3_HEIGHT);
-    
-    glutSetWindow(View1);
-    // Setup ARgsub_lite library for current OpenGL context.
-    if ((gArglSettings = arglSetupForCurrentContext(&(gCparamLT->param), arVideoGetPixelFormat())) == NULL) {
-        ARLOGe("main(): arglSetupForCurrentContext() returned error.\n");
-        cleanup();
-        exit(-1);
-    }
-    arglSetupDebugMode(gArglSettings, gARHandle);
-    arUtilTimerReset();
-    
-    // Load marker(s).
-    if ((gARPattHandle = arPattCreateHandle()) == NULL) {
-        ARLOGe("setupMarker(): Error: arPattCreateHandle.\n");
-        return (FALSE);
-    }
-    
-    int markerIdx;
-    for(markerIdx = 0; markerIdx < NUM_OF_MARKER; markerIdx++)
-    {
-        if(gMarkers[markerIdx].gPatt_name == NULL)
-        {
-            break;
-        }
-        if ((gMarkers[markerIdx].gPatt_id = arPattLoad(gARPattHandle, gMarkers[markerIdx].gPatt_name)) < 0) {
-            ARLOGe("setupMarker(): Error loading pattern file %s.\n", gMarkers[markerIdx].gPatt_name);
-            arPattDeleteHandle(gARPattHandle);
-            return (FALSE);
-        }
-        arPattAttach(gARHandle, gARPattHandle);
-    }
-    
-    loadObjects();
-    
-    // Register GLUT event-handling callbacks.
-    // NB: mainLoop() is registered by Visibility.
-    glutSetWindow(window);
-    glutDisplayFunc(Main_Display);
-    //glutReshapeFunc(Reshape);
-    
-    glutSetWindow(View1);
-    glutDisplayFunc(View1_Display);
-    glutKeyboardFunc(Keyboard);
-    
-    glutSetWindow(View2);
-    //glutReshapeFunc(Reshape);
-    glutDisplayFunc(View2_Display);
-    glutKeyboardFunc(Keyboard);
-    
-    glutSetWindow(View3);
-    //glutReshapeFunc(Reshape);
-    glutDisplayFunc(View3_Display);
-    //glutKeyboardFunc(Keyboard);
-    
+ 
+    glutDisplayFunc(Welcome_Display);
     glutMainLoop();
     
     return (0);
