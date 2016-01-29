@@ -63,6 +63,14 @@ extern GLuint woodTexture;
 extern GLuint redTexture;
 extern GLuint yellowTexture;
 
+//label on welcome page
+extern std::vector<glm::vec3> label_vertices;
+extern std::vector<glm::vec2> label_uvs;
+extern std::vector<glm::vec3> label_normals;
+extern GLuint label_vertexbuffer;
+extern GLuint label_uvbuffer;
+extern GLuint labelTexture;
+
 //read a set of objects from file
 extern int numofObjects;
 extern int numofPieces;
@@ -92,6 +100,7 @@ void drawFurniture(furniturePiece *pieces);
 void drawAnimation(int step);
 int loadAnimation(char * filename);
 void loadText();
+void loadLabel();
 void loadCube();
 void loadScrew();
 void loadObject(char * obj_file,

@@ -8,7 +8,7 @@
 
 #include "drawUtilities.hpp"
 #include "opencvUtilities.hpp"
-
+#include "texture.h"
 
 void DrawText(tablePiece piece)
 {
@@ -415,6 +415,19 @@ void loadText()
         
         printf("vertexbuffer is: %d, uvbuffer is: %d\n", vertexbuffer[textIdx], uvbuffer[textIdx]);
     }
+}
+
+void loadLabel()
+{
+    //load the texture
+    labelTexture = loadBMP_custom("Data/mesh/label.bmp");
+    loadObject("Data/mesh/plane.obj",
+               &label_vertices,
+               &label_uvs,
+               &label_normals,
+               &label_vertexbuffer,
+               &label_uvbuffer);
+
 }
 
 int loadFurnitureObject(char *filename, furniturePiece **pieces)

@@ -56,6 +56,8 @@
 
 #include "viewDisplay.hpp"
 #include "opencvUtilities.hpp"
+#include "drawUtilities.hpp"
+#include "shader.hpp"
 
 using namespace cv;
 using namespace glm;
@@ -371,13 +373,92 @@ static void Main_Display(void) {
 
 static void Welcome_Display(void)
 {
+    loadObjects();
+    // Create and compile our GLSL program from the shaders
+    GLuint programID = LoadShaders( "Data/shader/simple.vertexshader", "Data/shader/simple.fragmentshader");
+    
+    // Get a handle for our "MVP" uniform
+    GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+    
+    // Get a handle for our buffers
+    GLuint vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
+    GLuint vertexUVID = glGetAttribLocation(programID, "vertexUV");
+    GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
+
+
     if (!welcomed) {
         glClearColor(BACKGROUND_R_v3, BACKGROUND_G_v3, BACKGROUND_B_v3, 0.5f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+        
+        glUseProgram(programID);
+        
+        // Projection matrix : 45¡ Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+        glm::mat4 Projection = glm::perspective(45.0f, (float)FRAME_WIDTH / FRAME_HEIGHT, 0.1f, 100.0f);
+        // Camera matrix
+        glm::mat4 View       = glm::lookAt(
+                                           glm::vec3(0,0,100), // Camera is at (4,3,3), in World Space
+                                           glm::vec3(0,0,0), // and looks at the origin
+                                           glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                                           );
+        // Model matrix : an identity matrix (model will be at the origin)
+        glm::mat4 Model;
+        // Our ModelViewProjection : multiplication of our 3 matrices
+       
+        // Bind our texture in Texture Unit 0
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, labelTexture);
+        // Set our "myTextureSampler" sampler to user Texture Unit 0
+        glUniform1i(TextureID, 0);
+        
+        glPushMatrix();
+        
+        glRotatef(180.0, 0.0, 0.0, 1.0);
+        glScalef(20.0, 10.0, 1.0);
+        glGetFloatv(GL_MODELVIEW_MATRIX, &Model[0][0]);
+        
+        glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
+        
+        
+        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+        
+        // 1rst attribute buffer : vertices
+        glEnableVertexAttribArray(vertexPosition_modelspaceID);
+        glBindBuffer(GL_ARRAY_BUFFER, label_vertexbuffer);
+        glVertexAttribPointer(
+                              vertexPosition_modelspaceID,  // The attribute we want to configure
+                              3,                            // size
+                              GL_FLOAT,                     // type
+                              GL_FALSE,                     // normalized?
+                              0,                            // stride
+                              (void*)0                      // array buffer offset
+                              );
+        
+        // 2nd attribute buffer : UVs
+        glEnableVertexAttribArray(vertexUVID);
+        glBindBuffer(GL_ARRAY_BUFFER, label_uvbuffer);
+        glVertexAttribPointer(
+                              vertexUVID,                   // The attribute we want to configure
+                              2,                            // size : U+V => 2
+                              GL_FLOAT,                     // type
+                              GL_FALSE,                     // normalized?
+                              0,                            // stride
+                              (void*)0                      // array buffer offset
+                              );
+        
+        // Draw the triangles !
+        glDrawArrays(GL_TRIANGLES, 0, label_vertices.size()); // 12*3 indices starting at 0 -> 12 triangles
+        
+        glDisableVertexAttribArray(vertexPosition_modelspaceID);
+        glDisableVertexAttribArray(vertexUVID);
+        glPopMatrix();
+        
         glutSwapBuffers();
+
         welcomed = true;
         glutPostRedisplay();
+        
+        
         //glutKeyboardFunc(Keyboard);
 
     } else if (windowNotSplit){
@@ -472,7 +553,6 @@ static void Welcome_Display(void)
             arPattAttach(gARHandle, gARPattHandle);
         }
         
-        loadObjects();
         
         // Register GLUT event-handling callbacks.
         // NB: mainLoop() is registered by Visibility.
@@ -480,21 +560,23 @@ static void Welcome_Display(void)
         glutDisplayFunc(Main_Display);
         //glutReshapeFunc(Reshape);
         
-         glutSetWindow(View1);
-         glutDisplayFunc(View1_Display);
-         glutKeyboardFunc(Keyboard);
+        glutSetWindow(View1);
+        glutDisplayFunc(View1_Display);
+        glutKeyboardFunc(Keyboard);
          
-         glutSetWindow(View2);
-         //glutReshapeFunc(Reshape);
-         glutDisplayFunc(View2_Display);
-         glutKeyboardFunc(Keyboard);
+        glutSetWindow(View2);
+        //glutReshapeFunc(Reshape);
+        glutDisplayFunc(View2_Display);
+        glutKeyboardFunc(Keyboard);
          
-         glutSetWindow(View3);
-         //glutReshapeFunc(Reshape);
-         glutDisplayFunc(View3_Display);
-         //glutKeyboardFunc(Keyboard);
+        glutSetWindow(View3);
+        //glutReshapeFunc(Reshape);
+        glutDisplayFunc(View3_Display);
+        //glutKeyboardFunc(Keyboard);
         
         glutMainLoop();
+        
+        
         
     } else {
         glClearColor(BACKGROUND_R_v3, BACKGROUND_G_v3, BACKGROUND_B_v3, 0.5f);
