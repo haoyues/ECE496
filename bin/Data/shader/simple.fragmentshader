@@ -10,5 +10,4 @@ void main(){
 
 	// Output color = color of the texture at the specified UV
 	gl_FragColor = texture2D( myTextureSampler, UV );
-	gl_FragColor.a = 0.3;
 }

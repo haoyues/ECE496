@@ -77,20 +77,15 @@ static void printHelpKeys()
     GLfloat  w, bw, bh;
     const char *helpText[] = {
         "Keys:\n",
-        " ? or /        Show/hide this help.",
-        " q or [esc]    Quit program.",
-        " d             Activate / deactivate debug mode.",
-        " m             Toggle display of mode info.",
-        " a             Toggle between available threshold modes.",
-        " - and +       Switch to manual threshold mode, and adjust threshhold up/down by 5.",
-        " x             Change image processing mode.",
-        " c             Calulcate frame rate.",
-        " space         Start animation.",
+        " n             animation next step.",
+        " p             animation previous step.",
         " r             Rotate the model CCW.",
         " R             Rotate the model CW.",
         " s             Scale up the model.",
-        " S             Scale down the model."
+        " S             Scale down the model.",
+        " Esc           Quit."
     };
+    
 #define helpTextLineCount (sizeof(helpText)/sizeof(char *))
     
     bw = 0.0f;
@@ -398,7 +393,7 @@ void View1_Display(void)
     // Draw help text and mode.
     //
     if (gShowMode) {
-        printMode();
+        //printMode();
         printHelpKeys();
     }
     
@@ -469,9 +464,60 @@ int setupMarker(char *filename)
     return (TRUE);
 }
 
+/**************************** RENDER TEXT TEST ************************************/
+void renderBitmapString(float x, float y, void *font,const char *string){
+    const char *c;
+    glRasterPos2f(x, y);
+    for (c=string; *c != '\0'; c++) {
+        glutBitmapCharacter(font, *c);
+    }
+}
+
+void setOrthographicProjection() {
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0, VIEW2_WIDTH, 0, VIEW2_HEIGHT);
+    glScalef(1, -1, 1);
+    glTranslatef(0, -VIEW2_HEIGHT, 0);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+void resetPerspectiveProjection() {
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+}
+
+void View4_Display(void)
+{
+    glutPostRedisplay();
+    
+    glClearColor(BACKGROUND_R_v2, BACKGROUND_G_v2, BACKGROUND_B_v2, BACKGROUND_alpha);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glColor3d(1.0, 0.0, 0.0);
+    setOrthographicProjection();
+    glPushMatrix();
+    glLoadIdentity();
+    
+    if(!gStartAnimation)
+    {
+        renderBitmapString(50, 150, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Press n to start the animation");
+    }
+    else
+    {
+        renderBitmapString(50, 140, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Press n to go to next step");
+        renderBitmapString(50, 300, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Press p to go to previous step");
+    }
+    glPopMatrix();
+    resetPerspectiveProjection();
+    glutSwapBuffers();
+}
+/**************************** RENDER TEXT TEST ************************************/
+
+
 void View2_Display(void)
 {
-    
     if(!view2_obj_loaded)
     {
         //load your obj here
@@ -518,7 +564,7 @@ void View2_Display(void)
 
     if(!gStartAnimation)
     {
-        printf("start animation is: %d\n", gStartAnimation);
+        //printf("start animation is: %d\n", gStartAnimation);
         drawFurniture(model);
     }
     else
@@ -531,7 +577,7 @@ void View2_Display(void)
         
         if(gCounter-1 < totalNumofStep)
         {
-            printf("gCounter is: %d\n", gCounter);
+            //printf("gCounter is: %d\n", gCounter);
             drawAnimation(gCounter-1);
         }
         else

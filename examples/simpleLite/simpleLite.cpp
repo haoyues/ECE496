@@ -58,6 +58,7 @@
 #include "opencvUtilities.hpp"
 #include "drawUtilities.hpp"
 #include "shader.hpp"
+//#include <gtk/gtk.h>
 
 using namespace cv;
 using namespace glm;
@@ -408,7 +409,7 @@ static void Welcome_Display(void)
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, labelTexture);
         // Set our "myTextureSampler" sampler to user Texture Unit 0
-        glUniform1i(TextureID, 0);
+        //glUniform1i(TextureID, 0);
         
         glPushMatrix();
         
@@ -425,8 +426,7 @@ static void Welcome_Display(void)
         // 1rst attribute buffer : vertices
         glEnableVertexAttribArray(vertexPosition_modelspaceID);
         glBindBuffer(GL_ARRAY_BUFFER, label_vertexbuffer);
-        glVertexAttribPointer(
-                              vertexPosition_modelspaceID,  // The attribute we want to configure
+        glVertexAttribPointer(vertexPosition_modelspaceID,  // The attribute we want to configure
                               3,                            // size
                               GL_FLOAT,                     // type
                               GL_FALSE,                     // normalized?
@@ -437,8 +437,7 @@ static void Welcome_Display(void)
         // 2nd attribute buffer : UVs
         glEnableVertexAttribArray(vertexUVID);
         glBindBuffer(GL_ARRAY_BUFFER, label_uvbuffer);
-        glVertexAttribPointer(
-                              vertexUVID,                   // The attribute we want to configure
+        glVertexAttribPointer(vertexUVID,                   // The attribute we want to configure
                               2,                            // size : U+V => 2
                               GL_FLOAT,                     // type
                               GL_FALSE,                     // normalized?
@@ -515,9 +514,10 @@ static void Welcome_Display(void)
         
         //define the position of the views
         
-         View1 = glutCreateSubWindow(window, 0, 0, VIEW1_WIDTH, VIEW1_HEIGHT);
-         View2 = glutCreateSubWindow(window, VIEW1_WIDTH+GAP, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
-         View3 = glutCreateSubWindow(window, 0, VIEW2_HEIGHT+GAP, VIEW3_WIDTH, VIEW3_HEIGHT);
+        View1 = glutCreateSubWindow(window, 0, 0, VIEW1_WIDTH, VIEW1_HEIGHT);
+        View2 = glutCreateSubWindow(window, VIEW1_WIDTH+GAP, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
+        View3 = glutCreateSubWindow(window, 0, VIEW2_HEIGHT+VIEW4_HEIGHT+GAP, VIEW3_WIDTH, VIEW3_HEIGHT);
+        View4 = glutCreateSubWindow(window, VIEW1_WIDTH+GAP, VIEW2_HEIGHT+GAP, VIEW4_WIDTH, VIEW4_HEIGHT);
         
         glutSetWindow(View1);
         
@@ -573,6 +573,9 @@ static void Welcome_Display(void)
         //glutReshapeFunc(Reshape);
         glutDisplayFunc(View3_Display);
         //glutKeyboardFunc(Keyboard);
+        
+        glutSetWindow(View4);
+        glutDisplayFunc(View4_Display);
         
         glutMainLoop();
         

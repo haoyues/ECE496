@@ -63,9 +63,11 @@
 #define VIEW1_WIDTH             615
 #define VIEW1_HEIGHT            460
 #define VIEW2_WIDTH             409
-#define VIEW2_HEIGHT            460
+#define VIEW2_HEIGHT            410
 #define VIEW3_WIDTH             1024
 #define VIEW3_HEIGHT            308
+#define VIEW4_WIDTH             409
+#define VIEW4_HEIGHT            50
 #define GAP                     5
 
 extern ARHandle		*gARHandle;
@@ -113,6 +115,7 @@ extern int gCounter;
 void View1_Display(void);
 void View2_Display(void);
 void View3_Display(void);
+void View4_Display(void);
 void loadObjects(void);
 int setupMarker(char *filename);
 
