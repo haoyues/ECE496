@@ -35,7 +35,8 @@
 
 
 #define NUM_OF_NUMBER           10
-#define ANIMATION_SPEED         0.5
+#define ANIMATION_SPEED         0.2
+#define MAX_NAME_LEN            100
 
 typedef struct _furniturePiece
 {
