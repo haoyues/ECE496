@@ -36,7 +36,8 @@ void DrawText(tablePiece piece)
         default:
             break;
     }
-    
+    printf("textIdx is: %d\n", textIdx);
+    printf("vertex buffer is: %d\n", vertexbuffer[textIdx]);
     drawObject(redTexture, vertexbuffer[textIdx], uvbuffer[textIdx], vertices[textIdx], uvs[textIdx]);
  }
 
@@ -114,6 +115,8 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
     if(piece_end.marker != -1 && gMarkers[piece_end.marker].gPatt_found)
     {
         drawObject(yellowTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+        
+        correct_piece = 1;
     }
     else if (piece_end.marker == -1 && opencvUtilities::gScrews[piece_end.color].objectFound) {
         if (opencvUtilities::gScrews[piece_end.color].numbersShown <
@@ -121,15 +124,18 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
             drawObject(yellowTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
             opencvUtilities::gScrews[piece_end.color].numbersShown ++;
             printf("numbersToShow: %d, numbersShown: %d\n", opencvUtilities::gScrews[piece_end.color].numbersToShow, opencvUtilities::gScrews[piece_end.color].numbersShown);
+            correct_piece = 1;
         } else {
             
             if(piece_end.marker != -1)
             {
                 drawObject(woodTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+                //correct_piece = 0;
             }
             else
             {
                 drawObject(opencvUtilities::silverTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+                //correct_piece = 0;
             }
         }
     }
@@ -138,10 +144,12 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
         if(piece_end.marker != -1)
         {
             drawObject(woodTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+            correct_piece = 0;
         }
         else
         {
-            drawObject(opencvUtilities::silverTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+            drawObject(opencvUtilities::gTextures[piece_end.color], obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
+            //correct_piece = 0;
         }
     }
     

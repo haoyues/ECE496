@@ -43,6 +43,9 @@ std::vector<glm::vec3> screw_normals;
 GLuint screw_vertexbuffer;
 GLuint screw_uvbuffer;
 
+int correct_piece = 0;
+
+
 static bool view2_obj_loaded = false;
 static bool view3_obj_loaded = false;
 static bool animation_loaded = false;
@@ -504,11 +507,26 @@ void View4_Display(void)
     {
         renderBitmapString(50, 150, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Press n to start the animation");
     }
-    else
+    else if(gCounter == 1)
     {
         renderBitmapString(50, 140, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Press n to go to next step");
         renderBitmapString(50, 300, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Press p to go to previous step");
+        
     }
+    else if(gCounter == 2)
+    {
+        renderBitmapString(50, 140, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Pick up the piece");
+        renderBitmapString(50, 300, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Correct piece will be highlighted");
+    }
+    else if(!correct_piece)
+    {
+        renderBitmapString(50, 150, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Wrong piece!");
+    }
+    else if(correct_piece)
+    {
+        renderBitmapString(50, 150, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Correct piece!");
+    }
+    
     glPopMatrix();
     resetPerspectiveProjection();
     glutSwapBuffers();

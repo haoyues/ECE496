@@ -95,6 +95,8 @@ extern GLuint screw_uvbuffer;
 
 extern ARMarker *gMarkers;
 
+extern int correct_piece;
+
 void DrawText(tablePiece piece);
 void DrawCube();
 void drawFurniture(furniturePiece *pieces);
