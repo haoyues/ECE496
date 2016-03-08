@@ -18,7 +18,7 @@
 
 #define MAX_NUM_OBJECTS         50
 #define MIN_OBJECT_AREA         40*40
-#define MAX_COLOUR_NUM          3
+#define MAX_COLOUR_NUM          7
 
 class opencvUtilities {
 public:

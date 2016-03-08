@@ -24,6 +24,18 @@ ColoredObj::ColoredObj(string type_) {
     } else if (type_ == "yellow") {
         setBGRmin(Scalar(0, 123, 0));
         setBGRmax(Scalar(69, 255, 255));
+    } else if (type_ == "orange") {
+        setBGRmin(Scalar(15, 10, 183));
+        setBGRmax(Scalar(84, 255, 255));
+    } else if (type_ == "blue") {
+        setBGRmin(Scalar(92, 1, 0));
+        setBGRmax(Scalar(255, 113, 67));
+    } else if (type_ == "purple") {
+        setBGRmin(Scalar(101, 65, 81));
+        setBGRmax(Scalar(156, 103, 133));
+    } else if (type_ == "light green") {
+        setBGRmin(Scalar(51, 73, 10));
+        setBGRmax(Scalar(123, 135, 82));
     }
 }
 
