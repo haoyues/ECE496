@@ -110,7 +110,9 @@ extern float gDrawTranslateDistanceLeg2;
 extern float gDrawTranslateDistanceLeg3;
 extern float gDrawTranslateDistanceLeg4;
 
-extern int gCounter;
+extern int gCounter_view2;
+extern int gCounter_view3;
+
 
 void View1_Display(void);
 void View2_Display(void);

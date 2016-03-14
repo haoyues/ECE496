@@ -1,0 +1,5 @@
+Count=2 Piece Count=4
+Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=-80.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
+Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=-80.0 TransY=-25.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
+Name=Data/mesh/A.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=-20.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=90.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
+Name=Data/mesh/A.obj ScaleX=12.0 ScaleY=12.0 ScaleZ=12.0 TransX=40.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=90.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1

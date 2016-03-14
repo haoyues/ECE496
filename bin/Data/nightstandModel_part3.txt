@@ -1,0 +1,14 @@
+Count=7 Piece Count=13
+Name=Data/mesh/G.obj ScaleX=6.0 ScaleY=6.0 ScaleZ=6.0 TransX=-30.0 TransY=-13.0 TransZ=0.0 RotateX=30.0 RotateY=0.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
+Name=Data/mesh/G.obj ScaleX=6.0 ScaleY=6.0 ScaleZ=6.0 TransX=30.0 TransY=-13.0 TransZ=0.0 RotateX=30.0 RotateY=0.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
+Name=Data/mesh/F.obj ScaleX=6.0 ScaleY=6.0 ScaleZ=6.0 TransX=0.0 TransY=-5.0 TransZ=-15.0 RotateX=30.0 RotateY=90.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
+Name=Data/mesh/J.obj ScaleX=6.0 ScaleY=6.0 ScaleZ=6.0 TransX=0.0 TransY=-20.0 TransZ=18.0 RotateX=30.0 RotateY=90.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
+Name=Data/mesh/I.obj ScaleX=6.0 ScaleY=6.0 ScaleZ=6.0 TransX=0.0 TransY=-18.0 TransZ=-2.0 RotateX=30.0 RotateY=90.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
+Name=Data/mesh/Screw_1inch.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=20.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/Screw_1inch.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=20.0 TransY=-20.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/Screw_1inch.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=40.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/Screw_1inch.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=40.0 TransY=-20.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/WoodDowel.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=60.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/WoodDowel.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=80.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/ZincCam.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=60.0 TransY=-20.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/ZincCam.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=80.0 TransY=-20.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
