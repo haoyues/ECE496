@@ -103,7 +103,12 @@ ARMarker *gMarkers;
 bool rotated = false;
 bool scaled = false;
 double modelScaleFactor = 1.0;
-double modelRotateAngle = 0.0;
+double modelRotateAngleX = 0.0;
+double modelRotateAngleY = 0.0;
+double modelRotateAngleZ = 0.0;
+bool rotateAlongX = false;
+bool rotateAlongY = false;
+bool rotateAlongZ = false;
 
 float gDrawRotateTableAngle = 0;     // For flipping table face.
 int gDrawRotate = TRUE;
@@ -238,9 +243,6 @@ static void cleanup(void)
 
 static void Keyboard(unsigned char key, int x, int y)
 {
-    int mode, threshChange = 0;
-    AR_LABELING_THRESH_MODE modea;
-    
     switch (key) {
         case 0x1B:						// Quit.
         case 'Q':
@@ -248,48 +250,20 @@ static void Keyboard(unsigned char key, int x, int y)
             cleanup();
             exit(0);
             break;
-        case ' ':
-            break;
-        case 'X':
         case 'x':
-            arGetImageProcMode(gARHandle, &mode);
-            switch (mode) {
-                case AR_IMAGE_PROC_FRAME_IMAGE:  mode = AR_IMAGE_PROC_FIELD_IMAGE; break;
-                case AR_IMAGE_PROC_FIELD_IMAGE:
-                default: mode = AR_IMAGE_PROC_FRAME_IMAGE; break;
-            }
-            arSetImageProcMode(gARHandle, mode);
+            rotateAlongX = true;
+            rotateAlongY = false;
+            rotateAlongZ = false;
             break;
-        case 'C':
-        case 'c':
-            ARLOGe("*** Camera - %f (frame/sec)\n", (double)gCallCountMarkerDetect/arUtilTimer());
-            gCallCountMarkerDetect = 0;
-            arUtilTimerReset();
+        case 'y':
+            rotateAlongX = false;
+            rotateAlongY = true;
+            rotateAlongZ = false;
             break;
-        case 'a':
-        case 'A':
-            arGetLabelingThreshMode(gARHandle, &modea);
-            switch (modea) {
-                case AR_LABELING_THRESH_MODE_MANUAL:        modea = AR_LABELING_THRESH_MODE_AUTO_MEDIAN; break;
-                case AR_LABELING_THRESH_MODE_AUTO_MEDIAN:   modea = AR_LABELING_THRESH_MODE_AUTO_OTSU; break;
-                case AR_LABELING_THRESH_MODE_AUTO_OTSU:     modea = AR_LABELING_THRESH_MODE_AUTO_ADAPTIVE; break;
-                case AR_LABELING_THRESH_MODE_AUTO_ADAPTIVE: modea = AR_LABELING_THRESH_MODE_AUTO_BRACKETING; break;
-                case AR_LABELING_THRESH_MODE_AUTO_BRACKETING:
-                default: modea = AR_LABELING_THRESH_MODE_MANUAL; break;
-            }
-            arSetLabelingThreshMode(gARHandle, modea);
-            break;
-        case '-':
-            threshChange = -5;
-            break;
-        case '+':
-        case '=':
-            threshChange = +5;
-            break;
-        case 'D':
-        case 'd':
-            arGetDebugMode(gARHandle, &mode);
-            arSetDebugMode(gARHandle, !mode);
+        case 'z':
+            rotateAlongX = false;
+            rotateAlongY = false;
+            rotateAlongZ = true;
             break;
         case 's':
             //scale up
@@ -302,21 +276,22 @@ static void Keyboard(unsigned char key, int x, int y)
             modelScaleFactor -= 0.1;
             scaled = false;
             break;
-        case '?':
-        case '/':
-            gShowHelp++;
-            if (gShowHelp > 1) gShowHelp = 0;
-            break;
-        case 'm':
-        case 'M':
-            gShowMode = !gShowMode;
-            break;
         case 'r':
-            modelRotateAngle += 5.0;
+            if(rotateAlongX)
+                modelRotateAngleX += 5.0;
+            if(rotateAlongY)
+                modelRotateAngleY += 5.0;
+            if(rotateAlongZ)
+                modelRotateAngleZ += 5.0;
             rotated = false;
             break;
         case 'R':
-            modelRotateAngle -= 5.0;
+            if(rotateAlongX)
+                modelRotateAngleX -= 5.0;
+            if(rotateAlongY)
+                modelRotateAngleY -= 5.0;
+            if(rotateAlongZ)
+                modelRotateAngleZ -= 5.0;
             rotated = false;
             break;
         case 'n':
@@ -333,15 +308,6 @@ static void Keyboard(unsigned char key, int x, int y)
         default:
             break;
     }
-    if (threshChange) {
-        int threshhold;
-        arGetLabelingThresh(gARHandle, &threshhold);
-        threshhold += threshChange;
-        if (threshhold < 0) threshhold = 0;
-        if (threshhold > 255) threshhold = 255;
-        arSetLabelingThresh(gARHandle, threshhold);
-    }
-    
 }
 
 //

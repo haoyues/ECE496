@@ -89,7 +89,12 @@ extern int NUM_OF_MARKER;
 extern bool rotated;
 extern bool scaled;
 extern double modelScaleFactor;
-extern double modelRotateAngle;
+extern double modelRotateAngleX;
+extern double modelRotateAngleY;
+extern double modelRotateAngleZ;
+extern bool rotateAlongX;
+extern bool rotateAlongY;
+extern bool rotateAlongZ;
 
 extern float gDrawRotateTableAngle;     // For flipping table face.
 extern int gDrawRotate;

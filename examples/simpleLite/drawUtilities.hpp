@@ -33,7 +33,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-//n#define SIDE_TABLE
+//#define SIDE_TABLE
 
 #define NUM_OF_NUMBER           10
 #define ANIMATION_SPEED         0.5
@@ -42,7 +42,7 @@
 #ifdef SIDE_TABLE
 #define NUM_OF_FILES            1
 #else
-#define NUM_OF_FILES            1
+#define NUM_OF_FILES            4
 #endif
 
 typedef struct _furniturePiece

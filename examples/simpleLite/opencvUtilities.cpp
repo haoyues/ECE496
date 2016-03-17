@@ -10,7 +10,7 @@
 #include "viewDisplay.hpp"
 
 ColoredObj opencvUtilities::gScrews[MAX_COLOUR_NUM];
-string opencvUtilities::gScrewTypes[MAX_COLOUR_NUM] = {"red", "green", "yellow"};
+string opencvUtilities::gScrewTypes[MAX_COLOUR_NUM] = {"red", "green", "yellow", "orange", "blue", "purple", "light green"};
 GLuint opencvUtilities::gTextures[MAX_COLOUR_NUM];
 GLuint opencvUtilities::silverTexture;
 

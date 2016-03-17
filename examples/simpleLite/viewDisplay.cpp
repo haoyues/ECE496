@@ -79,12 +79,12 @@ const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/furnitureInventory.txt"};
 const char* ANIMATION_FILENAME[NUM_OF_FILES] = {"Data/furnitureAnimation.txt"};
 const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/furnitureModel.txt"};
 #else
-const char* INVENTORY_FILENAME[NUM_OF_FILES] = {/*"Data/nightstandInventor_part1.txt",
-    "Data/nightstandInventory_part2.txt", */"Data/nightstandInventory_part3.txt"};
-const char* ANIMATION_FILENAME[NUM_OF_FILES] = {/*"Data/nightstandAnimation_part1.txt",
-    "Data/nightstandAnimation_part2.txt",*/ "Data/nightstandAnimation_part3.txt"};
-const char* MODEL_FILENAME[NUM_OF_FILES] = {/*"Data/nightstandModel_part1.txt",
-    "Data/nightstandModel_part2.txt",*/ "Data/nightstandModel_part3.txt"};
+const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/nightstandInventory_part1.txt",
+    "Data/nightstandInventory_part2.txt", "Data/nightstandInventory_part3.txt", "Data/nightstandInventory_part4.txt"};
+const char* ANIMATION_FILENAME[NUM_OF_FILES] = {"Data/nightstandAnimation_part1.txt",
+    "Data/nightstandAnimation_part2.txt", "Data/nightstandAnimation_part3.txt", "Data/nightstandAnimation_part4.txt"};
+const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/nightstandModel_part1.txt",
+    "Data/nightstandModel_part2.txt", "Data/nightstandModel_part3.txt", "Data/nightstandModel_part4.txt"};
 #endif
 
 /*const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/furnitureInventory.txt"};
@@ -743,7 +743,10 @@ void View2_Display(void)
     
     gluLookAt(0, 0, 100, 0, 0, 0, 0, 1, 0);
     
-    glRotatef(modelRotateAngle, 0.0, 1.0, 0.0);
+    glRotatef(modelRotateAngleX, 1.0, 0.0, 0.0);
+    glRotatef(modelRotateAngleY, 0.0, 1.0, 0.0);
+    glRotatef(modelRotateAngleZ, 0.0, 0.0, 1.0);
+    
     glScalef(modelScaleFactor, modelScaleFactor, modelScaleFactor);
     
     printf("gCounter is: %d, total number of step is: %d\n", gCounter_view2, totalNumofStep);
