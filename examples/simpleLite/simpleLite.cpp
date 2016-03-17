@@ -68,6 +68,12 @@ using namespace glm;
 
 #define MAX_MARKER_NUM          60
 #define NUM_OF_NUMBER           10
+
+#ifdef SIDE_TABLE
+const char* MARKER_FILENAME = "Data/marker_table.txt";
+#else
+const char* MARKER_FILENAME = "Data/marker_nightstand.txt";
+#endif
 // ============================================================================
 //	Global variables
 // ============================================================================
@@ -477,7 +483,6 @@ int main(int argc, char** argv)
 {
     char glutGamemode[32];
     char cparam_name[] = "Data/external_camera_para.dat";
-    char markerFilename[] = "Data/marker.txt";
     char vconf[] = "";
     
     //
@@ -495,7 +500,7 @@ int main(int argc, char** argv)
         fprintf(stdout, "Current working dir: %s\n", cwd);
     
     
-    if(!setupMarker(markerFilename))
+    if(!setupMarker(MARKER_FILENAME))
     {
         ARLOGe("main(): Unable to set up AR markers.\n");
         exit(-1);

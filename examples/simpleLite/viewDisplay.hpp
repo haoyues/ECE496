@@ -124,6 +124,6 @@ void View2_Display(void);
 void View3_Display(void);
 void View4_Display(void);
 void loadObjects(void);
-int setupMarker(char *filename);
+int setupMarker(const char *filename);
 
 #endif /* viewDisplay_hpp */

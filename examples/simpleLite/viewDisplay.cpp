@@ -87,6 +87,8 @@ const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/nightstandModel_part1.txt",
     "Data/nightstandModel_part2.txt", "Data/nightstandModel_part3.txt", "Data/nightstandModel_part4.txt"};
 #endif
 
+
+
 /*const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/furnitureInventory.txt"};
 const char* ANIMATION_FILENAME[NUM_OF_FILES] = {"Data/furnitureAnimation.txt"};
 const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/furnitureModel.txt"};*/
@@ -413,14 +415,14 @@ void View1_Display(void)
             glLoadMatrixd(m);
 #endif
             
-            // All lighting and geometry to be drawn relative to the marker goes here.
+            /*// All lighting and geometry to be drawn relative to the marker goes here.
             glPushMatrix();
             glRotatef(-90.0, 0.0, 1.0, 0.0);
             glScalef(60, 60, 60);
             //glTranslatef(0.0f, 0.0f, 0.5f);
             DrawText(gMarkers[markerIdx].piece);
             //DrawCube();
-            glPopMatrix();
+            glPopMatrix();*/
         }
     }
     
@@ -464,7 +466,7 @@ static bool foundPattern()
     return FALSE;
 }
 
-int setupMarker(char *filename)
+int setupMarker(const char *filename)
 {
     FILE *markerFile = NULL;
     int markerCount = 0;
@@ -473,7 +475,7 @@ int setupMarker(char *filename)
     char name[MAX_NAME_LEN];
     double dimension;
     tablePiece piece;
-    markerFile = fopen("Data/marker.txt", "rb");
+    markerFile = fopen(filename, "rb");
     
     if(markerFile == NULL)
     {
@@ -501,9 +503,10 @@ int setupMarker(char *filename)
         gMarkers[markerCount].piece = piece;
         
         markerCount++;
-        
     }
     
+    printf("number of markers: %d\n", markerCount);
+
     fclose(markerFile);
     return (TRUE);
 }

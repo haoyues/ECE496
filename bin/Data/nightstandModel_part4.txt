@@ -1,9 +1,9 @@
 Count=6 Piece Count=21
 Name=Data/mesh/SidePanel.obj ScaleX=8.0 ScaleY=8.0 ScaleZ=8.0 TransX=-25.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
 Name=Data/mesh/SidePanel.obj ScaleX=8.0 ScaleY=8.0 ScaleZ=8.0 TransX=25.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=180.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
-Name=Data/mesh/C.obj ScaleX=6.0 ScaleY=4.0 ScaleZ=4.0 TransX=0.0 TransY=-13.0 TransZ=10.0 RotateX=90.0 RotateY=90.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
-Name=Data/mesh/D.obj ScaleX=12.0 ScaleY=8.0 ScaleZ=5.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=90.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
-Name=Data/mesh/D.obj ScaleX=13.0 ScaleY=8.0 ScaleZ=5.0 TransX=0.0 TransY=18.0 TransZ=0.0 RotateX=0.0 RotateY=90.0 RotateZ=0.0 FrontMarker=1 BackMarker=-1 Display=1 Color=-1
+Name=Data/mesh/C.obj ScaleX=6.0 ScaleY=4.0 ScaleZ=4.0 TransX=0.0 TransY=-13.0 TransZ=10.0 RotateX=90.0 RotateY=90.0 RotateZ=0.0 FrontMarker=2 BackMarker=-1 Display=1 Color=-1
+Name=Data/mesh/D.obj ScaleX=12.0 ScaleY=8.0 ScaleZ=5.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=90.0 RotateZ=0.0 FrontMarker=3 BackMarker=-1 Display=1 Color=-1
+Name=Data/mesh/D.obj ScaleX=13.0 ScaleY=8.0 ScaleZ=5.0 TransX=0.0 TransY=18.0 TransZ=0.0 RotateX=0.0 RotateY=90.0 RotateZ=0.0 FrontMarker=4 BackMarker=-1 Display=1 Color=-1
 Name=Data/mesh/Screw_2inch.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=50.0 TransY=10.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
 Name=Data/mesh/Screw_2inch.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=50.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
 Name=Data/mesh/Screw_2inch.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=70.0 TransY=10.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
