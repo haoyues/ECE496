@@ -1,0 +1,12 @@
+Count=10
+Name=Data/patt.A Dimension=80.0 Piece=0
+Name=Data/patt.B Dimension=80.0 Piece=1
+Name=Data/patt.C Dimension=80.0 Piece=2
+Name=Data/patt.D Dimension=80.0 Piece=3
+Name=Data/patt.E Dimension=80.0 Piece=4
+Name=Data/patt.F Dimension=80.0 Piece=5
+Name=Data/patt.G Dimension=80.0 Piece=6
+Name=Data/patt.H Dimension=80.0 Piece=7
+Name=Data/patt.I Dimension=80.0 Piece=8
+Name=Data/patt.J Dimension=80.0 Piece=9
+

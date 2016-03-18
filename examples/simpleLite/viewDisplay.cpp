@@ -2,6 +2,7 @@
 #include "viewDisplay.hpp"
 #include "drawUtilities.hpp"
 #include "opencvUtilities.hpp"
+#include "shader.hpp"
 
 std::vector<glm::vec3> vertices[NUM_OF_NUMBER];
 std::vector<glm::vec2> uvs[NUM_OF_NUMBER];
@@ -44,11 +45,53 @@ GLuint screw_vertexbuffer;
 GLuint screw_uvbuffer;
 
 int correct_piece = 0;
+int isSubtract = 0;
 
+int loadNewInventoryFile = 1;
+int loadNewModelFile = 1;
+int loadNewAnimationFile = 1;
+int loadOldInventoryFile = 0;
+int loadOldModelFile = 0;
+int loadOldAnimationFile = 0;
+int inventoryFileCounter = 0;
+int modelFileCounter = 0;
+int animationFileCounter = 0;
+
+/*********** shader ************/
+GLuint programID;
+GLuint MatrixID;
+
+// Get a handle for our buffers
+GLuint vertexPosition_modelspaceID;
+GLuint vertexUVID;
+GLuint TextureID;
+/*********** shader ************/
+
+int prevCounter_view2 = 0;
+int prevCounter_view3 = 0;
 
 static bool view2_obj_loaded = false;
 static bool view3_obj_loaded = false;
 static bool animation_loaded = false;
+
+#ifdef SIDE_TABLE
+const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/furnitureInventory.txt"};
+const char* ANIMATION_FILENAME[NUM_OF_FILES] = {"Data/furnitureAnimation.txt"};
+const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/furnitureModel.txt"};
+#else
+const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/nightstandInventory_part1.txt",
+    "Data/nightstandInventory_part2.txt", "Data/nightstandInventory_part3.txt", "Data/nightstandInventory_part4.txt"};
+const char* ANIMATION_FILENAME[NUM_OF_FILES] = {"Data/nightstandAnimation_part1.txt",
+    "Data/nightstandAnimation_part2.txt", "Data/nightstandAnimation_part3.txt", "Data/nightstandAnimation_part4.txt"};
+const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/nightstandModel_part1.txt",
+    "Data/nightstandModel_part2.txt", "Data/nightstandModel_part3.txt", "Data/nightstandModel_part4.txt"};
+#endif
+
+
+
+/*const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/furnitureInventory.txt"};
+const char* ANIMATION_FILENAME[NUM_OF_FILES] = {"Data/furnitureAnimation.txt"};
+const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/furnitureModel.txt"};*/
 
 static void print(const char *text, const float x, const float y, int calculateXFromRightEdge, int calculateYFromTopEdge)
 {
@@ -164,7 +207,7 @@ static void printMode()
     
 }
 
-static void DrawModelUpdate(float timeDelta)
+/*static void DrawModelUpdate(float timeDelta)
 {
     float speed = 0.2f;
     if (gDrawRotate) {
@@ -223,7 +266,7 @@ static void DrawModelUpdate(float timeDelta)
         }
         gDrawTranslateDistanceLeg4 += timeDelta * speed; // Translate cube at 0.1 pixels per second.
     }
-}
+}*/
 
 void loadObjects(void)
 {
@@ -251,7 +294,7 @@ static void mainLoop(void)
     ms_prev = ms;
     
     // Update drawing.
-    DrawModelUpdate(s_elapsed);
+    //DrawModelUpdate(s_elapsed);
     
     // Grab a video frame.
     if ((image = arVideoGetImage()) != NULL) {
@@ -372,14 +415,14 @@ void View1_Display(void)
             glLoadMatrixd(m);
 #endif
             
-            // All lighting and geometry to be drawn relative to the marker goes here.
+            /*// All lighting and geometry to be drawn relative to the marker goes here.
             glPushMatrix();
             glRotatef(-90.0, 0.0, 1.0, 0.0);
             glScalef(60, 60, 60);
             //glTranslatef(0.0f, 0.0f, 0.5f);
             DrawText(gMarkers[markerIdx].piece);
             //DrawCube();
-            glPopMatrix();
+            glPopMatrix();*/
         }
     }
     
@@ -423,7 +466,7 @@ static bool foundPattern()
     return FALSE;
 }
 
-int setupMarker(char *filename)
+int setupMarker(const char *filename)
 {
     FILE *markerFile = NULL;
     int markerCount = 0;
@@ -432,7 +475,7 @@ int setupMarker(char *filename)
     char name[MAX_NAME_LEN];
     double dimension;
     tablePiece piece;
-    markerFile = fopen("Data/marker.txt", "rb");
+    markerFile = fopen(filename, "rb");
     
     if(markerFile == NULL)
     {
@@ -460,9 +503,10 @@ int setupMarker(char *filename)
         gMarkers[markerCount].piece = piece;
         
         markerCount++;
-        
     }
     
+    printf("number of markers: %d\n", markerCount);
+
     fclose(markerFile);
     return (TRUE);
 }
@@ -507,34 +551,32 @@ void View4_Display(void)
     {
         renderBitmapString(50, 150, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Press n to start the animation");
     }
-    else if(gCounter == 1)
+    else if(gCounter_view2 == 1)
     {
         renderBitmapString(50, 140, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Press n to go to next step");
         renderBitmapString(50, 300, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Press p to go to previous step");
         
     }
-    else if(gCounter == 2)
+    else if(gCounter_view2 == 2)
     {
         renderBitmapString(50, 140, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Pick up the piece");
         renderBitmapString(50, 300, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Correct piece will be highlighted");
     }
-    else if(!correct_piece)
+    /*else if(!correct_piece)
     {
         renderBitmapString(50, 150, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Wrong piece!");
     }
     else if(correct_piece)
     {
         renderBitmapString(50, 150, (void *)GLUT_BITMAP_TIMES_ROMAN_24, "Correct piece!");
-    }
+    }*/
     
     glPopMatrix();
     resetPerspectiveProjection();
     glutSwapBuffers();
 }
-/**************************** RENDER TEXT TEST ************************************/
 
-
-void View2_Display(void)
+void View2_Display_shader(void)
 {
     if(!view2_obj_loaded)
     {
@@ -549,6 +591,133 @@ void View2_Display(void)
         loadAnimation("Data/furnitureAnimation.txt");
 
         view2_obj_loaded = true;
+        
+        /************ shader **************/
+        programID = LoadShaders( "Data/shader/simple.vertexshader", "Data/shader/simple.fragmentshader");
+        
+        // Get a handle for our "MVP" uniform
+        MatrixID = glGetUniformLocation(programID, "MVP");
+        
+        // Get a handle for our buffers
+        vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
+        vertexUVID = glGetAttribLocation(programID, "vertexUV");
+        TextureID  = glGetUniformLocation(programID, "myTextureSampler");
+        
+        glUseProgram(programID);
+        /************ shader **************/
+    }
+    
+    // Projection matrix : 45¡ Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+    glm::mat4 Projection = glm::perspective(45.0f, (float)VIEW2_WIDTH / VIEW2_HEIGHT, 0.1f, 150.0f);
+    // Camera matrix
+    glm::mat4 View       = glm::lookAt(
+                                       glm::vec3(0,0,100), // Camera is at (0,0,100), in World Space
+                                       glm::vec3(0,0,0), // and looks at the origin
+                                       glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                                       );
+
+    glClearColor(BACKGROUND_R_v2, BACKGROUND_G_v2, BACKGROUND_B_v2, BACKGROUND_alpha);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    /*glViewport(0, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
+    
+    // Set the aspect ratio of the clipping volume to match the viewport
+    glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
+    
+    glLoadIdentity();             // Reset
+    // Enable perspective projection with fovy, aspect, zNear and zFar
+    gluPerspective(45.0f, (float)VIEW2_WIDTH/VIEW2_HEIGHT, 0.1f, 150.0f);
+    
+    glMatrixMode(GL_MODELVIEW);
+    
+    glEnable(GL_DEPTH_TEST);
+    
+    // Viewing transformation.
+    glLoadIdentity();
+    
+    gluLookAt(0, 0, 100, 0, 0, 0, 0, 1, 0);*/
+
+    glm::mat4 PV = Projection * View;
+    
+    if(!gStartAnimation)
+    {
+        //printf("start animation is: %d\n", gStartAnimation);
+        drawFurniture_shader(model, PV);
+    }
+    else
+    {
+        /*if(!animation_loaded)
+        {
+            loadAnimation("Data/furnitureAnimation.txt");
+            animation_loaded = true;
+        }*/
+        
+        if(gCounter_view2-1 < totalNumofStep)
+        {
+            //printf("gCounter is: %d\n", gCounter);
+            drawAnimation_shader(gCounter_view2-1, PV);
+        }
+        else
+        {
+             drawFurniture_shader(model, PV);
+        }
+    }
+    
+    glutSwapBuffers();
+    glutPostRedisplay();
+
+}
+
+void View2_Display(void)
+{
+    if(!view2_obj_loaded)
+    {
+        //load your obj here
+        woodTexture = loadBMP_custom("Data/mesh/wood.bmp");
+        redTexture = loadBMP_custom("Data/mesh/red.bmp");
+        yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");
+        
+        opencvUtilities::loadScrewsTexture();
+        
+        view2_obj_loaded = true;
+    }
+    
+    /*if(loadInventoryFile)
+    {
+        //loadFurnitureObject(INVENTORY_FILENAME[inventoryFileCounter-1], &pieces);
+        loadInventoryFile = 0;
+    }*/
+    
+    if(loadNewModelFile && modelFileCounter < NUM_OF_FILES && loadNewAnimationFile && animationFileCounter < NUM_OF_FILES)
+    {
+        loadFurnitureObject(MODEL_FILENAME[modelFileCounter], &model);
+        loadNewModelFile = 0;
+        
+        modelFileCounter++;
+        
+        loadAnimation(ANIMATION_FILENAME[animationFileCounter]);
+        loadNewAnimationFile = 0;
+        animationFileCounter++;
+    }
+    if(loadOldModelFile && modelFileCounter > 0 && loadOldAnimationFile && animationFileCounter > 0)
+    {
+        if(modelFileCounter-2 >= 0 )
+        {
+            modelFileCounter = modelFileCounter-2;
+            printf("model file counter is: %d\n", modelFileCounter);
+            loadFurnitureObject(MODEL_FILENAME[modelFileCounter], &model);
+        }
+        loadOldModelFile = 0;
+        
+        if(animationFileCounter-2 >= 0)
+        {
+            animationFileCounter = animationFileCounter-2;
+            printf("animation file counter is: %d\n", animationFileCounter);
+            loadAnimation(ANIMATION_FILENAME[animationFileCounter]);
+        }
+        loadOldAnimationFile = 0;
     }
     
     glutPostRedisplay();
@@ -557,7 +726,7 @@ void View2_Display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     //glutSwapBuffers();
-
+    
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, VIEW2_WIDTH, VIEW2_HEIGHT);
     
@@ -577,9 +746,30 @@ void View2_Display(void)
     
     gluLookAt(0, 0, 100, 0, 0, 0, 0, 1, 0);
     
-    glRotatef(modelRotateAngle, 0.0, 1.0, 0.0);
+    glRotatef(modelRotateAngleX, 1.0, 0.0, 0.0);
+    glRotatef(modelRotateAngleY, 0.0, 1.0, 0.0);
+    glRotatef(modelRotateAngleZ, 0.0, 0.0, 1.0);
+    
     glScalef(modelScaleFactor, modelScaleFactor, modelScaleFactor);
+    
+    printf("gCounter is: %d, total number of step is: %d\n", gCounter_view2, totalNumofStep);
 
+    /*if(gCounter_view2 > totalNumofStep && animationFileCounter >= NUM_OF_FILES)
+    {
+        gCounter_view2 = totalNumofStep;
+    }*/
+    
+    if(gCounter_view2 == -1 )
+    {
+        //if(modelFileCounter > 1 && animationFileCounter > 1)
+        {
+            loadOldModelFile = 1;
+            loadOldAnimationFile = 1;
+            gStartAnimation = 1;
+        }
+        gCounter_view2 = prevCounter_view2;
+        printf("gCounter is: %d, total number of step is: %d\n", gCounter_view2, totalNumofStep);
+    }
     if(!gStartAnimation)
     {
         //printf("start animation is: %d\n", gStartAnimation);
@@ -588,19 +778,27 @@ void View2_Display(void)
     else
     {
         /*if(!animation_loaded)
+         {
+         loadAnimation("Data/furnitureAnimation.txt");
+         animation_loaded = true;
+         }*/
+        if(gCounter_view2 == 0)
         {
-            loadAnimation("Data/furnitureAnimation.txt");
-            animation_loaded = true;
-        }*/
-        
-        if(gCounter-1 < totalNumofStep)
+            drawFurniture(model);
+        }
+        // the animation finishes
+        else if(gCounter_view2 == totalNumofStep && modelFileCounter < NUM_OF_FILES && animationFileCounter < NUM_OF_FILES)
+        {
+            prevCounter_view2 = gCounter_view2;
+            gCounter_view2 = 0;
+            loadNewModelFile = 1;
+            loadNewAnimationFile = 1;
+            gStartAnimation = 0;
+        }
+        else if(gCounter_view2-1 < totalNumofStep)
         {
             //printf("gCounter is: %d\n", gCounter);
-            drawAnimation(gCounter-1);
-        }
-        else
-        {
-             drawFurniture(model);
+            drawAnimation(gCounter_view2-1);
         }
     }
     
@@ -609,7 +807,6 @@ void View2_Display(void)
 
 void View3_Display(void)
 {
-    
     if(!view3_obj_loaded)
     {
         //load your obj here
@@ -618,12 +815,33 @@ void View3_Display(void)
         yellowTexture = loadBMP_custom("Data/mesh/yellow.bmp");
         
         opencvUtilities::loadScrewsTexture();
-
-        
-        loadFurnitureObject("Data/furnitureInventory.txt", &pieces);
         view3_obj_loaded = true;
     }
     
+    /*if(loadInventoryFile)
+    {
+        loadFurnitureObject(INVENTORY_FILENAME[inventoryFileCounter-1], &pieces);
+        loadInventoryFile = 0;
+    }*/
+    
+    if(loadNewInventoryFile && inventoryFileCounter < NUM_OF_FILES)
+    {
+        loadFurnitureObject(INVENTORY_FILENAME[inventoryFileCounter], &pieces);
+        loadNewInventoryFile = 0;
+        inventoryFileCounter++;
+    }
+    if(loadOldInventoryFile && inventoryFileCounter > 0)
+    {
+        if(inventoryFileCounter - 2 >= 0)
+        {
+            inventoryFileCounter = inventoryFileCounter-2;
+            loadFurnitureObject(INVENTORY_FILENAME[inventoryFileCounter], &pieces);
+        }
+        loadOldInventoryFile = 0;
+    }
+    
+    printf("display 3: gCounter is: %d, total number of step is: %d\n", gCounter_view3, totalNumofStep);
+
     glutPostRedisplay();
     
     glClearColor(BACKGROUND_R_v3, BACKGROUND_G_v3, BACKGROUND_B_v3, BACKGROUND_alpha);
@@ -646,7 +864,26 @@ void View3_Display(void)
     
     gluLookAt(0, 0, 100, 0, 0, 0, 0, 1, 0);
     
-    drawFurniture(pieces);
+    if(gCounter_view3 > 0 && gCounter_view3 < totalNumofStep)
+    {
+        drawFurniture(pieces);
+    }
+    
+    if(gCounter_view3 == -1)
+    {
+        //if(inventoryFileCounter > 1)
+        {
+            loadOldInventoryFile = 1;
+        }
+        gCounter_view3 = prevCounter_view3;
+    }
+    
+    if(gCounter_view3 == totalNumofStep && inventoryFileCounter < NUM_OF_FILES)
+    {
+        prevCounter_view3 = gCounter_view3;
+        gCounter_view3 = 0;
+        loadNewInventoryFile = 1;
+    }
     
     glutSwapBuffers();
 }

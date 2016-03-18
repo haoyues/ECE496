@@ -89,7 +89,12 @@ extern int NUM_OF_MARKER;
 extern bool rotated;
 extern bool scaled;
 extern double modelScaleFactor;
-extern double modelRotateAngle;
+extern double modelRotateAngleX;
+extern double modelRotateAngleY;
+extern double modelRotateAngleZ;
+extern bool rotateAlongX;
+extern bool rotateAlongY;
+extern bool rotateAlongZ;
 
 extern float gDrawRotateTableAngle;     // For flipping table face.
 extern int gDrawRotate;
@@ -110,13 +115,15 @@ extern float gDrawTranslateDistanceLeg2;
 extern float gDrawTranslateDistanceLeg3;
 extern float gDrawTranslateDistanceLeg4;
 
-extern int gCounter;
+extern int gCounter_view2;
+extern int gCounter_view3;
+
 
 void View1_Display(void);
 void View2_Display(void);
 void View3_Display(void);
 void View4_Display(void);
 void loadObjects(void);
-int setupMarker(char *filename);
+int setupMarker(const char *filename);
 
 #endif /* viewDisplay_hpp */

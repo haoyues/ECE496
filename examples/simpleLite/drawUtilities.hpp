@@ -33,10 +33,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+//#define SIDE_TABLE
 
 #define NUM_OF_NUMBER           10
 #define ANIMATION_SPEED         0.5
 #define MAX_NAME_LEN            100
+
+#ifdef SIDE_TABLE
+#define NUM_OF_FILES            1
+#else
+#define NUM_OF_FILES            4
+#endif
 
 typedef struct _furniturePiece
 {
@@ -44,7 +51,8 @@ typedef struct _furniturePiece
     GLfloat translate[3];
     GLfloat rotate[3];
     GLuint bufferIdx;
-    int marker;
+    int front_marker;
+    int back_marker;
     int display;
     int color;
 }furniturePiece;
@@ -97,11 +105,35 @@ extern ARMarker *gMarkers;
 
 extern int correct_piece;
 
+extern int isSubtract;
+
+extern int loadNewInventoryFile;
+extern int loadNewModelFile;
+extern int loadNewAnimationFile;
+extern int inventoryFileCounter;
+extern int modelFileCounter;
+extern int animationFileCounter;
+
+/********* shader **********/
+extern GLuint programID;
+extern GLuint MatrixID;
+
+// Get a handle for our buffers
+extern GLuint vertexPosition_modelspaceID;
+extern GLuint vertexUVID;
+extern GLuint TextureID;
+
+extern int loadInventoryFile;
+
+
+/********* shader **********/
+
 void DrawText(tablePiece piece);
 void DrawCube();
 void drawFurniture(furniturePiece *pieces);
 void drawAnimation(int step);
-int loadAnimation(char * filename);
+void drawAnimation_shader(int step, glm::mat4 PV);
+int loadAnimation(const char * filename);
 void loadText();
 void loadLabel();
 void loadCube();
@@ -112,7 +144,14 @@ void loadObject(char * obj_file,
                 std::vector<glm::vec3> *normals,
                 GLuint *vertexbuffer,
                 GLuint *uvbuffer);
-int loadFurnitureObject(char *filename, furniturePiece **pieces);
+void drawObject_shader(GLuint texture,
+                GLuint vertexbuffer,
+                GLuint uvbuffer,
+                std::vector<glm::vec3> vertices,
+                std::vector<glm::vec2> uvs,
+                glm::mat4 MVP);
+int loadFurnitureObject(const char *filename, furniturePiece **pieces);
+void drawFurniture_shader(furniturePiece *pieces, glm::mat4 MV);
 void drawObject(GLuint texture, GLuint vertexbuffer, GLuint uvbuffer, std::vector<glm::vec3> vertices, std::vector<glm::vec2> uvs);
 void drawBackground(const float width, const float height, const float x, const float y);
 

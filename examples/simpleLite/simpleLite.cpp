@@ -68,6 +68,12 @@ using namespace glm;
 
 #define MAX_MARKER_NUM          60
 #define NUM_OF_NUMBER           10
+
+#ifdef SIDE_TABLE
+const char* MARKER_FILENAME = "Data/marker_table.txt";
+#else
+const char* MARKER_FILENAME = "Data/marker_nightstand.txt";
+#endif
 // ============================================================================
 //	Global variables
 // ============================================================================
@@ -103,7 +109,12 @@ ARMarker *gMarkers;
 bool rotated = false;
 bool scaled = false;
 double modelScaleFactor = 1.0;
-double modelRotateAngle = 0.0;
+double modelRotateAngleX = 0.0;
+double modelRotateAngleY = 0.0;
+double modelRotateAngleZ = 0.0;
+bool rotateAlongX = false;
+bool rotateAlongY = false;
+bool rotateAlongZ = false;
 
 float gDrawRotateTableAngle = 0;     // For flipping table face.
 int gDrawRotate = TRUE;
@@ -124,14 +135,17 @@ float gDrawTranslateDistanceLeg2 = 0;
 float gDrawTranslateDistanceLeg3 = 0;
 float gDrawTranslateDistanceLeg4 = 0;
 
-int gCounter = 0;
+int gCounter_view2 = 0;
+int gCounter_view3 = 0;
 
 bool welcomed = false;
 bool windowNotSplit = true;
 bool showedLogo = false;
+
+int loadInventoryFile = 0;
 /********************** ANIMATION **********************/
 
-/********************** SHADER **********************/
+/********************** SHADER **********************
 GLuint programID;
 GLuint vertexPosition;
 GLuint vertexUVID;
@@ -235,9 +249,6 @@ static void cleanup(void)
 
 static void Keyboard(unsigned char key, int x, int y)
 {
-    int mode, threshChange = 0;
-    AR_LABELING_THRESH_MODE modea;
-    
     switch (key) {
         case 0x1B:						// Quit.
         case 'Q':
@@ -245,48 +256,20 @@ static void Keyboard(unsigned char key, int x, int y)
             cleanup();
             exit(0);
             break;
-        case ' ':
-            break;
-        case 'X':
         case 'x':
-            arGetImageProcMode(gARHandle, &mode);
-            switch (mode) {
-                case AR_IMAGE_PROC_FRAME_IMAGE:  mode = AR_IMAGE_PROC_FIELD_IMAGE; break;
-                case AR_IMAGE_PROC_FIELD_IMAGE:
-                default: mode = AR_IMAGE_PROC_FRAME_IMAGE; break;
-            }
-            arSetImageProcMode(gARHandle, mode);
+            rotateAlongX = true;
+            rotateAlongY = false;
+            rotateAlongZ = false;
             break;
-        case 'C':
-        case 'c':
-            ARLOGe("*** Camera - %f (frame/sec)\n", (double)gCallCountMarkerDetect/arUtilTimer());
-            gCallCountMarkerDetect = 0;
-            arUtilTimerReset();
+        case 'y':
+            rotateAlongX = false;
+            rotateAlongY = true;
+            rotateAlongZ = false;
             break;
-        case 'a':
-        case 'A':
-            arGetLabelingThreshMode(gARHandle, &modea);
-            switch (modea) {
-                case AR_LABELING_THRESH_MODE_MANUAL:        modea = AR_LABELING_THRESH_MODE_AUTO_MEDIAN; break;
-                case AR_LABELING_THRESH_MODE_AUTO_MEDIAN:   modea = AR_LABELING_THRESH_MODE_AUTO_OTSU; break;
-                case AR_LABELING_THRESH_MODE_AUTO_OTSU:     modea = AR_LABELING_THRESH_MODE_AUTO_ADAPTIVE; break;
-                case AR_LABELING_THRESH_MODE_AUTO_ADAPTIVE: modea = AR_LABELING_THRESH_MODE_AUTO_BRACKETING; break;
-                case AR_LABELING_THRESH_MODE_AUTO_BRACKETING:
-                default: modea = AR_LABELING_THRESH_MODE_MANUAL; break;
-            }
-            arSetLabelingThreshMode(gARHandle, modea);
-            break;
-        case '-':
-            threshChange = -5;
-            break;
-        case '+':
-        case '=':
-            threshChange = +5;
-            break;
-        case 'D':
-        case 'd':
-            arGetDebugMode(gARHandle, &mode);
-            arSetDebugMode(gARHandle, !mode);
+        case 'z':
+            rotateAlongX = false;
+            rotateAlongY = false;
+            rotateAlongZ = true;
             break;
         case 's':
             //scale up
@@ -299,43 +282,38 @@ static void Keyboard(unsigned char key, int x, int y)
             modelScaleFactor -= 0.1;
             scaled = false;
             break;
-        case '?':
-        case '/':
-            gShowHelp++;
-            if (gShowHelp > 1) gShowHelp = 0;
-            break;
-        case 'm':
-        case 'M':
-            gShowMode = !gShowMode;
-            break;
         case 'r':
-            modelRotateAngle += 5.0;
+            if(rotateAlongX)
+                modelRotateAngleX += 5.0;
+            if(rotateAlongY)
+                modelRotateAngleY += 5.0;
+            if(rotateAlongZ)
+                modelRotateAngleZ += 5.0;
             rotated = false;
             break;
         case 'R':
-            modelRotateAngle -= 5.0;
+            if(rotateAlongX)
+                modelRotateAngleX -= 5.0;
+            if(rotateAlongY)
+                modelRotateAngleY -= 5.0;
+            if(rotateAlongZ)
+                modelRotateAngleZ -= 5.0;
             rotated = false;
             break;
         case 'n':
             //gDrawRotate = !gDrawRotate;
             gStartAnimation = TRUE;
-            gCounter++;
+            gCounter_view2++;
+            gCounter_view3++;
             break;
         case 'p':
-            gCounter--;
+            gCounter_view2--;
+            gCounter_view3--;
+            loadInventoryFile = 1;
             break;
         default:
             break;
     }
-    if (threshChange) {
-        int threshhold;
-        arGetLabelingThresh(gARHandle, &threshhold);
-        threshhold += threshChange;
-        if (threshhold < 0) threshhold = 0;
-        if (threshhold > 255) threshhold = 255;
-        arSetLabelingThresh(gARHandle, threshhold);
-    }
-    
 }
 
 //
@@ -370,21 +348,21 @@ static void Main_Display(void) {
 
     loadLabel();
     
-    GLuint programID = LoadShaders( "Data/shader/simple.vertexshader", "Data/shader/simple.fragmentshader");
+    GLuint programID_main = LoadShaders( "Data/shader/simple.vertexshader", "Data/shader/simple.fragmentshader");
     
     // Get a handle for our "MVP" uniform
-    GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+    GLuint MatrixID_main = glGetUniformLocation(programID_main, "MVP");
     
     // Get a handle for our buffers
-    GLuint vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
-    GLuint vertexUVID = glGetAttribLocation(programID, "vertexUV");
-    GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
+    GLuint vertexPosition_modelspaceID_main = glGetAttribLocation(programID_main, "vertexPosition_modelspace");
+    GLuint vertexUVID_main = glGetAttribLocation(programID_main, "vertexUV");
+    GLuint TextureID_main  = glGetUniformLocation(programID_main, "myTextureSampler");
     
     //initGlui();
     glClearColor(BACKGROUND_R_v3, BACKGROUND_G_v3, BACKGROUND_B_v3, 0.5f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glUseProgram(programID);
+    glUseProgram(programID_main);
     
     // Projection matrix : 45Á Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
     glm::mat4 Projection = glm::perspective(45.0f, (float)FRAME_WIDTH / FRAME_HEIGHT, 0.1f, 100.0f);
@@ -417,9 +395,9 @@ static void Main_Display(void) {
     
     
     // 1rst attribute buffer : vertices
-    glEnableVertexAttribArray(vertexPosition_modelspaceID);
+    glEnableVertexAttribArray(vertexPosition_modelspaceID_main);
     glBindBuffer(GL_ARRAY_BUFFER, label_vertexbuffer);
-    glVertexAttribPointer(vertexPosition_modelspaceID,  // The attribute we want to configure
+    glVertexAttribPointer(vertexPosition_modelspaceID_main,  // The attribute we want to configure
                           3,                            // size
                           GL_FLOAT,                     // type
                           GL_FALSE,                     // normalized?
@@ -428,9 +406,9 @@ static void Main_Display(void) {
                           );
     
     // 2nd attribute buffer : UVs
-    glEnableVertexAttribArray(vertexUVID);
+    glEnableVertexAttribArray(vertexUVID_main);
     glBindBuffer(GL_ARRAY_BUFFER, label_uvbuffer);
-    glVertexAttribPointer(vertexUVID,                   // The attribute we want to configure
+    glVertexAttribPointer(vertexUVID_main,                   // The attribute we want to configure
                           2,                            // size : U+V => 2
                           GL_FLOAT,                     // type
                           GL_FALSE,                     // normalized?
@@ -441,8 +419,8 @@ static void Main_Display(void) {
     // Draw the triangles !
     glDrawArrays(GL_TRIANGLES, 0, label_vertices.size()); // 12*3 indices starting at 0 -> 12 triangles
     
-    glDisableVertexAttribArray(vertexPosition_modelspaceID);
-    glDisableVertexAttribArray(vertexUVID);
+    glDisableVertexAttribArray(vertexPosition_modelspaceID_main);
+    glDisableVertexAttribArray(vertexUVID_main);
     glPopMatrix();
     
     glutSwapBuffers();
@@ -505,7 +483,6 @@ int main(int argc, char** argv)
 {
     char glutGamemode[32];
     char cparam_name[] = "Data/external_camera_para.dat";
-    char markerFilename[] = "Data/marker.txt";
     char vconf[] = "";
     
     //
@@ -523,7 +500,7 @@ int main(int argc, char** argv)
         fprintf(stdout, "Current working dir: %s\n", cwd);
     
     
-    if(!setupMarker(markerFilename))
+    if(!setupMarker(MARKER_FILENAME))
     {
         ARLOGe("main(): Unable to set up AR markers.\n");
         exit(-1);
@@ -599,7 +576,7 @@ int main(int argc, char** argv)
     // Register GLUT event-handling callbacks.
     // NB: mainLoop() is registered by Visibility.
     glutSetWindow(window);
-    glutDisplayFunc(Welcome_Display);
+    glutDisplayFunc(Main_Display);
     //glutReshapeFunc(Reshape);
     
     glutSetWindow(View1);

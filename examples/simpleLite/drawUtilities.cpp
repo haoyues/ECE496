@@ -108,17 +108,25 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
     {
         glRotatef(piece_end.rotate[0], 1.0, 0.0, 0.0);
     }
+    if(piece_end.rotate[1] != 0.0)
+    {
+        glRotatef(piece_end.rotate[1], 0.0, 1.0, 0.0);
+    }
+    if(piece_end.rotate[2] != 0.0)
+    {
+        glRotatef(piece_end.rotate[2], 0.0, 0.0, 1.0);
+    }
     //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     //glEnable( GL_POLYGON_OFFSET_FILL );
     //glPolygonOffset( 1.0, 1.0 );
     
-    if(piece_end.marker != -1 && gMarkers[piece_end.marker].gPatt_found)
+    if(piece_end.front_marker != -1 && gMarkers[piece_end.front_marker].gPatt_found)
     {
         drawObject(yellowTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
         
         correct_piece = 1;
     }
-    else if (piece_end.marker == -1 && opencvUtilities::gScrews[piece_end.color].objectFound) {
+    else if (piece_end.front_marker == -1 && opencvUtilities::gScrews[piece_end.color].objectFound) {
         if (opencvUtilities::gScrews[piece_end.color].numbersShown <
             opencvUtilities::gScrews[piece_end.color].numbersToShow) {
             drawObject(yellowTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
@@ -127,7 +135,7 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
             correct_piece = 1;
         } else {
             
-            if(piece_end.marker != -1)
+            if(piece_end.front_marker != -1)
             {
                 drawObject(woodTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
                 //correct_piece = 0;
@@ -141,7 +149,7 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
     }
     else
     {
-        if(piece_end.marker != -1)
+        if(piece_end.front_marker != -1)
         {
             drawObject(woodTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx]);
             correct_piece = 0;
@@ -160,9 +168,138 @@ void drawFurnitureAnimation(furniturePiece piece_start, furniturePiece piece_end
     glPopMatrix();
 }
 
+void drawFurnitureAnimation_shader(furniturePiece piece_start, furniturePiece piece_end, int pieceIdx, glm::mat4 PV)
+{
+    glm::mat4 Model;
+    glPushMatrix();
+    
+    if((!startValueStored[pieceIdx]) &&
+       (piece_start.translate[0] != piece_end.translate[0] ||
+        piece_start.translate[1] != piece_end.translate[1] ||
+        piece_start.translate[2] != piece_end.translate[2]))
+    {
+        translated[pieceIdx][0] = piece_start.translate[0];
+        translated[pieceIdx][1] = piece_start.translate[1];
+        translated[pieceIdx][2] = piece_start.translate[2];
+        startValueStored[pieceIdx] = true;
+    }
+    else if (piece_start.translate[0] == piece_end.translate[0] &&
+             piece_start.translate[1] == piece_end.translate[1] &&
+             piece_start.translate[2] == piece_end.translate[2])
+    {
+        translated[pieceIdx][0] = piece_start.translate[0];
+        translated[pieceIdx][1] = piece_start.translate[1];
+        translated[pieceIdx][2] = piece_start.translate[2];
+    }
+    
+    if(translated[pieceIdx][0] != piece_end.translate[0] ||
+       translated[pieceIdx][1] != piece_end.translate[1] ||
+       translated[pieceIdx][2] != piece_end.translate[2])
+    {
+        glTranslatef(translated[pieceIdx][0], translated[pieceIdx][1], translated[pieceIdx][2]);
+        
+        if(translated[pieceIdx][0] != piece_end.translate[0] && translated[pieceIdx][0] >= piece_end.translate[0])
+        {
+            translated[pieceIdx][0] -= ANIMATION_SPEED;
+        }
+        else if(translated[pieceIdx][0] != piece_end.translate[0] && translated[pieceIdx][0] < piece_end.translate[0])
+        {
+            translated[pieceIdx][0] += ANIMATION_SPEED;
+        }
+        if(translated[pieceIdx][1] != piece_end.translate[1] && translated[pieceIdx][1] >= piece_end.translate[1])
+        {
+            translated[pieceIdx][1] -= ANIMATION_SPEED;
+        }
+        else if(translated[pieceIdx][1] != piece_end.translate[1] && translated[pieceIdx][1] < piece_end.translate[1])
+        {
+            translated[pieceIdx][1] += ANIMATION_SPEED;
+        }
+        if(translated[pieceIdx][2] != piece_end.translate[2] && translated[pieceIdx][2] >= piece_end.translate[2])
+        {
+            translated[pieceIdx][2] -= ANIMATION_SPEED;
+        }
+        else if (translated[pieceIdx][2] != piece_end.translate[2] && translated[pieceIdx][2] < piece_end.translate[2])
+        {
+            translated[pieceIdx][2] += ANIMATION_SPEED;
+        }
+    }
+    
+    else
+    {
+        glTranslatef(translated[pieceIdx][0], translated[pieceIdx][1], translated[pieceIdx][2]);
+        startValueStored[pieceIdx] = false;
+        memset(translated[pieceIdx], 0, 3 * sizeof(float));
+    }
+    
+    glScalef(piece_end.scale[0], piece_end.scale[1], piece_end.scale[2]);
+    if(piece_end.rotate[0] != 0.0)
+    {
+        glRotatef(piece_end.rotate[0], 1.0, 0.0, 0.0);
+    }
+    if(piece_end.rotate[1] != 0.0)
+    {
+        glRotatef(piece_end.rotate[1], 0.0, 1.0, 0.0);
+    }
+    if(piece_end.rotate[2] != 0.0)
+    {
+        glRotatef(piece_end.rotate[2], 0.0, 0.0, 1.0);
+    }
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    //glEnable( GL_POLYGON_OFFSET_FILL );
+    //glPolygonOffset( 1.0, 1.0 );
+    
+    glGetFloatv(GL_MODELVIEW_MATRIX, &Model[0][0]);
+    glm::mat4 MVP = PV * Model;
+    
+    if(piece_end.front_marker != -1 && gMarkers[piece_end.front_marker].gPatt_found)
+    {
+        drawObject_shader(yellowTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx], MVP);
+        
+        correct_piece = 1;
+    }
+    else if (piece_end.front_marker == -1 && opencvUtilities::gScrews[piece_end.color].objectFound) {
+        if (opencvUtilities::gScrews[piece_end.color].numbersShown <
+            opencvUtilities::gScrews[piece_end.color].numbersToShow) {
+            drawObject_shader(yellowTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx], MVP);
+            opencvUtilities::gScrews[piece_end.color].numbersShown ++;
+            printf("numbersToShow: %d, numbersShown: %d\n", opencvUtilities::gScrews[piece_end.color].numbersToShow, opencvUtilities::gScrews[piece_end.color].numbersShown);
+            correct_piece = 1;
+        } else {
+            
+            if(piece_end.front_marker != -1)
+            {
+                drawObject_shader(woodTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx], MVP);
+                //correct_piece = 0;
+            }
+            else
+            {
+                drawObject_shader(opencvUtilities::silverTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx], MVP);
+                //correct_piece = 0;
+            }
+        }
+    }
+    else
+    {
+        if(piece_end.front_marker != -1)
+        {
+            drawObject_shader(woodTexture, obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx], MVP);
+            correct_piece = 0;
+        }
+        else
+        {
+            drawObject_shader(opencvUtilities::gTextures[piece_end.color], obj_vertexbuffer[piece_end.bufferIdx], obj_uvbuffer[piece_end.bufferIdx], obj_vertices[piece_end.bufferIdx], obj_uvs[piece_end.bufferIdx], MVP);
+            //correct_piece = 0;
+        }
+    }
+
+    glDisable( GL_POLYGON_OFFSET_FILL );
+    glPopMatrix();
+}
+
 void drawFurniture(furniturePiece *pieces)
 {
     int i;
+    int count = 0;
     
     for (i = 0; i < MAX_COLOUR_NUM; i++) {
         opencvUtilities::gScrews[i].numbersShown = 0;
@@ -170,8 +307,10 @@ void drawFurniture(furniturePiece *pieces)
     
     for(i = 0; i < numofPieces; i++)
     {
+        //if all pieces are not displayed, then inventory is empyt, should move onto next file
         if(pieces[i].display)
         {
+            count++;
             glPushMatrix();
         
             glTranslatef(pieces[i].translate[0], pieces[i].translate[1], pieces[i].translate[2]);
@@ -180,16 +319,24 @@ void drawFurniture(furniturePiece *pieces)
             {
                 glRotatef(pieces[i].rotate[0], 1.0, 0.0, 0.0);
             }
+            if(pieces[i].rotate[1] != 0.0)
+            {
+                glRotatef(pieces[i].rotate[1], 0.0, 1.0, 0.0);
+            }
+            if(pieces[i].rotate[2] != 0.0)
+            {
+                glRotatef(pieces[i].rotate[2], 0.0, 0.0, 1.0);
+            }
             //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             //glEnable( GL_POLYGON_OFFSET_FILL );
             //glPolygonOffset( 1.0, 1.0 );
         
         
-            if(pieces[i].marker != -1 && gMarkers[pieces[i].marker].gPatt_found)
+            if(pieces[i].front_marker != -1 && gMarkers[pieces[i].front_marker].gPatt_found)
             {
                 drawObject(yellowTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx]);
             }
-            else if (pieces[i].marker == -1 && opencvUtilities::gScrews[pieces[i].color].objectFound) {
+            else if (pieces[i].front_marker == -1 && opencvUtilities::gScrews[pieces[i].color].objectFound) {
                 if (opencvUtilities::gScrews[pieces[i].color].numbersShown <
                     opencvUtilities::gScrews[pieces[i].color].numbersToShow) {
                     // Colour detected, need to highlight
@@ -223,6 +370,81 @@ void drawFurniture(furniturePiece *pieces)
     
 }
 
+void drawFurniture_shader(furniturePiece *pieces, glm::mat4 PV)
+{
+    int i;
+    glm::mat4 Model;
+    
+    for (i = 0; i < MAX_COLOUR_NUM; i++) {
+        opencvUtilities::gScrews[i].numbersShown = 0;
+    }
+    
+    for(i = 0; i < numofPieces; i++)
+    {
+        if(pieces[i].display)
+        {
+            glPushMatrix();
+            
+            glTranslatef(pieces[i].translate[0], pieces[i].translate[1], pieces[i].translate[2]);
+            glScalef(pieces[i].scale[0], pieces[i].scale[1], pieces[i].scale[2]);
+            if(pieces[i].rotate[0] != 0.0)
+            {
+                glRotatef(pieces[i].rotate[0], 1.0, 0.0, 0.0);
+            }
+            if(pieces[i].rotate[1] != 0.0)
+            {
+                glRotatef(pieces[i].rotate[1], 0.0, 1.0, 0.0);
+            }
+            if(pieces[i].rotate[2] != 0.0)
+            {
+                glRotatef(pieces[i].rotate[2], 0.0, 0.0, 1.0);
+            }
+            
+            glGetFloatv(GL_MODELVIEW_MATRIX, &Model[0][0]);
+            glm::mat4 MVP = PV * Model;
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            //glEnable( GL_POLYGON_OFFSET_FILL );
+            //glPolygonOffset( 1.0, 1.0 );
+            
+            
+            if(pieces[i].front_marker != -1 && gMarkers[pieces[i].front_marker].gPatt_found)
+            {
+                drawObject_shader(yellowTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx], MVP);
+            }
+            else if (pieces[i].front_marker == -1 && opencvUtilities::gScrews[pieces[i].color].objectFound) {
+                if (opencvUtilities::gScrews[pieces[i].color].numbersShown <
+                    opencvUtilities::gScrews[pieces[i].color].numbersToShow) {
+                    // Colour detected, need to highlight
+                    drawObject_shader(opencvUtilities::silverTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx], MVP);
+                    opencvUtilities::gScrews[pieces[i].color].numbersShown ++;
+                } else {
+                    // No need to highlight, show original colour
+                    drawObject_shader(opencvUtilities::gTextures[pieces[i].color], obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx], MVP);
+                }
+            }
+            else
+            {
+                if(pieces[i].color != -1)
+                {
+                    drawObject_shader(opencvUtilities::gTextures[pieces[i].color], obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx], MVP);
+                }
+                else
+                {
+                    drawObject_shader(woodTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_uvbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx], obj_uvs[pieces[i].bufferIdx], MVP);
+                }
+            }
+            
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            //drawObject(greenTexture, obj_vertexbuffer[pieces[i].bufferIdx], obj_vertices[pieces[i].bufferIdx]);
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            //glDisable( GL_POLYGON_OFFSET_FILL );
+            glPopMatrix();
+        }
+        
+    }
+    
+}
+
 static bool arrayCompare(float * array1, float * array2, int size)
 {
     int idx;
@@ -237,7 +459,7 @@ static bool arrayCompare(float * array1, float * array2, int size)
     return true;
 }
 
-void drawAnimation(int step)
+void drawAnimation_shader(int step, glm::mat4 PV)
 {
     //count the number of displayed pieces for previous step and current step
     int prev_step_piece = 0;
@@ -252,13 +474,91 @@ void drawAnimation(int step)
             {
                 prev_step_piece++;
                 pieces[idx].display = 0;
-
+                
             }
             if(instruction[step][idx].display == 1)
             {
                 curr_step_piece++;
+                
+            }
+        }
+        
+        if(prev_step_piece == curr_step_piece)
+        {
+            for(idx = 0; idx < numofPieces; idx++)
+            {
+                if(instruction[step][idx].display == 1)
+                {
+                    drawFurnitureAnimation_shader(instruction[step-1][idx], instruction[step][idx], idx, PV);
+                }
+            }
+        }
+        else
+        {
+            memset(startValueStored, 0, numofPieces * sizeof(bool));
+            drawFurniture_shader(instruction[step], PV);
+        }
+    }
+    else
+    {
+        drawFurniture_shader(instruction[step], PV);
+    }
+}
+
+void drawAnimation(int step)
+{
+    //count the number of displayed pieces for previous step and current step
+    int prev_step_piece = 0;
+    int curr_step_piece = 0;
+    int idx;
+    
+    /************ SPECIAL CASE: PREVIOUS STEP *************/
+    if(step == 0 &&  loadInventoryFile )
+    {
+        for(idx= 0; idx < numofPieces; idx++)
+        {
+            if(instruction[step][idx].display == 1)
+            {
+                pieces[idx].display = 1;
+            }
+        }
+        loadInventoryFile = 0;
+    }
+    
+    if(step > 0)
+    {
+        for(idx= 0; idx < numofPieces; idx++)
+        {
+            if(!isSubtract)
+            {
+                pieces[idx].display = 1;
+            }
+            
+            if(instruction[step - 1][idx].display == 1)
+            {
+                prev_step_piece++;
+                
+                if(!isSubtract)
+                {
+                    pieces[idx].display = 0;
+                }
+            }
+            if(instruction[step][idx].display == 1)
+            {
+                curr_step_piece++;
+            }
+            
+            /************ SPECIAL CASE: SUBTRACT PARTS *************/
+            if(isSubtract && instruction[step][idx].display == 1 && instruction[step+1][idx].display == 0)
+            {
+                pieces[idx].color = 2;
 
             }
+            /************ SPECIAL CASE: PREVIOUS STEP *************/
+            /*if(loadInventoryFile && instruction[step -1][idx].display == 1 && instruction[step][idx].display == 1)
+            {
+                pieces[idx].display = 1;
+            }*/
         }
         
         if(prev_step_piece == curr_step_piece)
@@ -294,7 +594,7 @@ void drawAnimation(int step)
     }
  }
 
-int loadAnimation(char * filename)
+int loadAnimation(const char * filename)
 {
     FILE *animationFile = NULL;
     char name[MAX_NAME_LEN];
@@ -318,7 +618,7 @@ int loadAnimation(char * filename)
         return (FALSE);
     }
     
-    fscanf(animationFile, "Total Step=%d\n", &totalNumofStep);
+    fscanf(animationFile, "Total Step=%d Subtract=%d\n", &totalNumofStep, &isSubtract);
     
     printf("total number of step is: %d\n", totalNumofStep);
     instruction = (furniturePiece **)malloc(totalNumofStep * sizeof(furniturePiece*));
@@ -337,7 +637,7 @@ int loadAnimation(char * filename)
     
     while (!feof(animationFile))
     {
-        if (fscanf(animationFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f Marker=%d Display=%d Color=%d\n",
+        if (fscanf(animationFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f FrontMarker=%d BackMarker=%d Display=%d Color=%d\n",
                    name,
                    &(instruction[step][pieceIdx].scale[0]),
                    &(instruction[step][pieceIdx].scale[1]),
@@ -348,9 +648,10 @@ int loadAnimation(char * filename)
                    &(instruction[step][pieceIdx].rotate[0]),
                    &(instruction[step][pieceIdx].rotate[1]),
                    &(instruction[step][pieceIdx].rotate[2]),
-                   &(instruction[step][pieceIdx].marker),
+                   &(instruction[step][pieceIdx].front_marker),
+                   &(instruction[step][pieceIdx].back_marker),
                    &(instruction[step][pieceIdx].display),
-                   &(instruction[step][pieceIdx].color)) == 13)
+                   &(instruction[step][pieceIdx].color)) == 14)
         {
             pieceIdx++;
         }
@@ -387,15 +688,51 @@ void drawObject(GLuint texture, GLuint vertexbuffer, GLuint uvbuffer, std::vecto
     glVertexPointer(3, GL_FLOAT, sizeof(glm::vec3), 0);
     glTexCoordPointer(2, GL_FLOAT, sizeof(glm::vec2), 0);
     
-    //glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &bufferSize);
-    //printf("buffer size is: %d\n", bufferSize);
-    
     glDrawArrays(GL_TRIANGLES, 0, vertices.size() * 3);
     
     glDisableClientState(GL_VERTEX_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisable(GL_TEXTURE_2D);
 }
+
+void drawObject_shader(GLuint texture, GLuint vertexbuffer, GLuint uvbuffer, std::vector<glm::vec3> vertices, std::vector<glm::vec2> uvs, glm::mat4 MVP)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // Set our "myTextureSampler" sampler to user Texture Unit 0
+    //glUniform1i(TextureID, 0);
+    
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+    
+    // 1rst attribute buffer : vertices
+    glEnableVertexAttribArray(vertexPosition_modelspaceID);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    glVertexAttribPointer(vertexPosition_modelspaceID,  // The attribute we want to configure
+                          3,                            // size
+                          GL_FLOAT,                     // type
+                          GL_FALSE,                     // normalized?
+                          0,                            // stride
+                          (void*)0                      // array buffer offset
+                          );
+    
+    // 2nd attribute buffer : UVs
+    glEnableVertexAttribArray(vertexUVID);
+    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+    glVertexAttribPointer(vertexUVID,                   // The attribute we want to configure
+                          2,                            // size : U+V => 2
+                          GL_FLOAT,                     // type
+                          GL_FALSE,                     // normalized?
+                          0,                            // stride
+                          (void*)0                      // array buffer offset
+                          );
+    
+    // Draw the triangles !
+    glDrawArrays(GL_TRIANGLES, 0, vertices.size()); // 12*3 indices starting at 0 -> 12 triangles
+    
+    glDisableVertexAttribArray(vertexPosition_modelspaceID);
+    glDisableVertexAttribArray(vertexUVID);
+}
+
 
 void loadText()
 {
@@ -438,7 +775,7 @@ void loadLabel()
 
 }
 
-int loadFurnitureObject(char *filename, furniturePiece **pieces)
+int loadFurnitureObject(const char *filename, furniturePiece **pieces)
 {
     
     FILE *furnitureObjFile = NULL;
@@ -472,7 +809,7 @@ int loadFurnitureObject(char *filename, furniturePiece **pieces)
     
     while (!feof(furnitureObjFile))
     {
-        if (fscanf(furnitureObjFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f Marker=%d Display=%d Color=%d\n",
+        if (fscanf(furnitureObjFile,"Name=%s ScaleX=%f ScaleY=%f ScaleZ=%f TransX=%f TransY=%f TransZ=%f RotateX=%f RotateY=%f RotateZ=%f FrontMarker=%d BackMarker=%d Display=%d Color=%d\n",
                    name,
                    &(*pieces)[pieceIdx].scale[0],
                    &(*pieces)[pieceIdx].scale[1],
@@ -483,9 +820,10 @@ int loadFurnitureObject(char *filename, furniturePiece **pieces)
                    &(*pieces)[pieceIdx].rotate[0],
                    &(*pieces)[pieceIdx].rotate[1],
                    &(*pieces)[pieceIdx].rotate[2],
-                   &(*pieces)[pieceIdx].marker,
+                   &(*pieces)[pieceIdx].front_marker,
+                   &(*pieces)[pieceIdx].back_marker,
                    &(*pieces)[pieceIdx].display,
-                   &(*pieces)[pieceIdx].color) != 13)
+                   &(*pieces)[pieceIdx].color) != 14)
         {
             // found a line that does match this pattern: try again later, the file might be currently written
             perror("error");
