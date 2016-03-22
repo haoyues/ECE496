@@ -18,6 +18,10 @@ void opencvUtilities::loadScrewsTexture() {
     opencvUtilities::gTextures[0] = loadBMP_custom("Data/mesh/red.bmp");
     opencvUtilities::gTextures[1] = loadBMP_custom("Data/mesh/green.bmp");
     opencvUtilities::gTextures[2] = loadBMP_custom("Data/mesh/yellow.bmp");
+    opencvUtilities::gTextures[3] = loadBMP_custom("Data/mesh/orange.bmp");
+    opencvUtilities::gTextures[4] = loadBMP_custom("Data/mesh/blue.bmp");
+    opencvUtilities::gTextures[5] = loadBMP_custom("Data/mesh/purple.bmp");
+    opencvUtilities::gTextures[6] = loadBMP_custom("Data/mesh/lightgreen.bmp");
     silverTexture = loadBMP_custom("Data/mesh/silver.bmp");
 
 }
