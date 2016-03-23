@@ -54,6 +54,7 @@
 //	Includes
 // ============================================================================
 
+#include <unistd.h>
 #include "viewDisplay.hpp"
 #include "opencvUtilities.hpp"
 #include "drawUtilities.hpp"
@@ -146,11 +147,11 @@ int loadInventoryFile = 0;
 /********************** ANIMATION **********************/
 
 /********************** SHADER **********************
-GLuint programID;
-GLuint vertexPosition;
-GLuint vertexUVID;
-GLuint TextureID;
-/********************** SHADER **********************/
+ GLuint programID;
+ GLuint vertexPosition;
+ GLuint vertexUVID;
+ GLuint TextureID;
+ /********************** SHADER **********************/
 
 /********************** CREATE MULTIPLE VIEWS ********************/
 GLuint window, View1, View2, View3, View4;
@@ -345,7 +346,7 @@ static void Reshape(int w, int h)
 //
 
 static void Main_Display(void) {
-
+    
     loadLabel();
     
     GLuint programID_main = LoadShaders( "Data/shader/simple.vertexshader", "Data/shader/simple.fragmentshader");
@@ -364,7 +365,7 @@ static void Main_Display(void) {
     
     glUseProgram(programID_main);
     
-    // Projection matrix : 45Á Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+    // Projection matrix : 45ç Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
     glm::mat4 Projection = glm::perspective(45.0f, (float)FRAME_WIDTH / FRAME_HEIGHT, 0.1f, 100.0f);
     // Camera matrix
     glm::mat4 View       = glm::lookAt(
@@ -571,7 +572,7 @@ int main(int argc, char** argv)
     opencvUtilities::loadScrewsTexture();
     
     loadText();
-
+    
     
     // Register GLUT event-handling callbacks.
     // NB: mainLoop() is registered by Visibility.

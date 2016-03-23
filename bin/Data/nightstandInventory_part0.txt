@@ -1,0 +1,2 @@
+Count=1 Piece Count=1
+Name=Data/mesh/nightStand.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1  Display=1 Color=1

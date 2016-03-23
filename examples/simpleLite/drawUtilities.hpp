@@ -42,7 +42,7 @@
 #ifdef SIDE_TABLE
 #define NUM_OF_FILES            1
 #else
-#define NUM_OF_FILES            4
+#define NUM_OF_FILES            5
 #endif
 
 typedef struct _furniturePiece

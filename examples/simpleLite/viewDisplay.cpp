@@ -79,12 +79,9 @@ const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/furnitureInventory.txt"};
 const char* ANIMATION_FILENAME[NUM_OF_FILES] = {"Data/furnitureAnimation.txt"};
 const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/furnitureModel.txt"};
 #else
-const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/nightstandInventory_part1.txt",
-    "Data/nightstandInventory_part2.txt", "Data/nightstandInventory_part3.txt", "Data/nightstandInventory_part4.txt"};
-const char* ANIMATION_FILENAME[NUM_OF_FILES] = {"Data/nightstandAnimation_part1.txt",
-    "Data/nightstandAnimation_part2.txt", "Data/nightstandAnimation_part3.txt", "Data/nightstandAnimation_part4.txt"};
-const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/nightstandModel_part1.txt",
-    "Data/nightstandModel_part2.txt", "Data/nightstandModel_part3.txt", "Data/nightstandModel_part4.txt"};
+const char* INVENTORY_FILENAME[NUM_OF_FILES] = {"Data/nightstandInventory_part0.txt","Data/nightstandInventory_part1.txt", "Data/nightstandInventory_part2.txt", "Data/nightstandInventory_part3.txt", "Data/nightstandInventory_part4.txt"};
+const char* ANIMATION_FILENAME[NUM_OF_FILES] = {"Data/nightstandAnimation_part0.txt", "Data/nightstandAnimation_part1.txt", "Data/nightstandAnimation_part2.txt", "Data/nightstandAnimation_part3.txt", "Data/nightstandAnimation_part4.txt"};
+const char* MODEL_FILENAME[NUM_OF_FILES] = {"Data/nightstandModel_part0.txt", "Data/nightstandModel_part1.txt", "Data/nightstandModel_part2.txt", "Data/nightstandModel_part3.txt", "Data/nightstandModel_part4.txt"};
 #endif
 
 
