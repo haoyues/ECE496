@@ -14,8 +14,8 @@ Name=Data/mesh/ZincCam.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=60.0 TransY=-
 Name=Data/mesh/ZincCam.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=80.0 TransY=-8.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=4
 Name=Data/mesh/24mmGTD.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=60.0 TransY=-26.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/24mmGTD.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=80.0 TransY=-26.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=90.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=100.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=120.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
+Name=Data/mesh/Stopper.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=100.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=2
+Name=Data/mesh/Stopper.obj ScaleX=4.0 ScaleY=4.0 ScaleZ=4.0 TransX=120.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=2
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=100.0 TransY=-8.0 TransZ=2.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=120.0 TransY=-8.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=100.0 TransY=-26.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1

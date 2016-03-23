@@ -2,8 +2,8 @@ Total Step=7 Subtract=1
 Step=0
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-30.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=30.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-30.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=2
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=30.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=2
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=0.0 TransY=0.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=15.0 TransY=0.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
@@ -11,8 +11,8 @@ Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=15.0 TransY=-10.
 Step=1
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=2
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=2
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=0.0 TransY=0.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=15.0 TransY=0.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
@@ -20,8 +20,8 @@ Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=15.0 TransY=-10.
 Step=2
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=0.0 TransY=0.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=15.0 TransY=0.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
@@ -29,8 +29,8 @@ Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=15.0 TransY=-10.
 Step=3
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=0.0 TransY=-25.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=0.0 TransY=15.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=15.0 TransY=15.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
@@ -38,8 +38,8 @@ Name=Data/mesh/Plug.obj ScaleX=2.0 ScaleY=2.0 ScaleZ=2.0 TransX=15.0 TransY=-25.
 Step=4
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=0.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=-10.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
 Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=15.0 TransY=-5.0 TransZ=15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
 Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=60.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
 Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=90.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
@@ -47,8 +47,8 @@ Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=60.0 TransY=-10.
 Step=5
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=20.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=-30.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=1 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
 Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=15.0 TransY=-5.0 TransZ=15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
 Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=60.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
 Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=90.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
@@ -56,8 +56,8 @@ Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=60.0 TransY=-10.
 Step=6
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=20.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
 Name=Data/mesh/Slider.obj ScaleX=5.0 ScaleY=5.0 ScaleZ=5.0 TransX=0.0 TransY=-30.0 TransZ=0.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
-Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=-50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
+Name=Data/mesh/Stopper.obj ScaleX=3.0 ScaleY=3.0 ScaleZ=2.0 TransX=50.0 TransY=-5.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=180.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=2
 Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=15.0 TransY=-5.0 TransZ=15.0 RotateX=0.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
 Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=60.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
 Name=Data/mesh/Plug.obj ScaleX=1.0 ScaleY=1.0 ScaleZ=1.0 TransX=90.0 TransY=10.0 TransZ=0.0 RotateX=90.0 RotateY=0.0 RotateZ=0.0 FrontMarker=-1 BackMarker=-1 Display=0 Color=1
